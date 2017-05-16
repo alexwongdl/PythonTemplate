@@ -1,4 +1,8 @@
-## Alex Wang @ 2017-05-11
+'''
+Created on 2017-05-16
+@author:Alex Wang
+字符串处理
+'''
 
 def to_str(bytes_or_str):
     if isinstance(bytes_or_str, bytes):
@@ -12,4 +16,7 @@ def to_bytes(bytes_or_str):
     else:
         return bytes_or_str
 
-
+def test():
+    print("test")
+    print(to_bytes("kdjfkd"))
+    print(to_str(b'dsfjksdl'))
