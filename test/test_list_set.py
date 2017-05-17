@@ -25,7 +25,7 @@ def test_slice_sequence():
     print(gene_a.__next__())
     print(gene_a.__next__())
     print(next(gene_a))
-    
+
 
 
 if __name__ == "__main__":
