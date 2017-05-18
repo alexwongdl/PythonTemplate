@@ -6,6 +6,7 @@ from test.tts import test_gtts
 from myutil import configutil
 
 def test_config():
+    print("test config..............")
     print(os.path.join(os.getcwd(),"resource\myconfig"))
     path = os.path.join(os.getcwd(),"resource\myconfig")
     print(configutil.get_value(path, "db", "db_user"))

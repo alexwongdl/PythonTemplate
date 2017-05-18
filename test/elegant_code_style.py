@@ -16,3 +16,9 @@ def test_zip():
     list_two = ["one","two","three","four"]
     for i, str in zip(list_one, list_two):
         print("{}\t{}".format(i, str))
+
+    print("test zip..........")
+    tuple_one = (1,2,3,4)
+    tuplt_two = ("one","two","three","four")
+    for i,str in zip(tuple_one, tuplt_two):
+        print("{}\t{}".format(i, str))
