@@ -29,3 +29,12 @@ def test_zip():
 def test_join():
     li = ["one", "two", "three", "four", "five"]
     print(",".join(li))
+
+
+def test_num():
+    str = "2087"
+    int_num = int(str)
+    print(int_num)
+
+if __name__ == "__main__":
+    test_num()
