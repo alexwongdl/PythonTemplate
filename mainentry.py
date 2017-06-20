@@ -5,6 +5,7 @@ from test import elegant_code_style
 from test.tts import test_gtts
 from myutil import configutil
 from myutil.logutil import LogUtil
+from test import test_except
 
 logger = LogUtil()
 def test_config():
@@ -31,4 +32,5 @@ if __name__ == "__main__":
     elegant_code_style.test_cnumerate()
     elegant_code_style.test_zip()
     elegant_code_style.test_join()
-    test_log()
+    # test_log()
+    test_except.test()
