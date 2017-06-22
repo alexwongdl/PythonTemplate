@@ -6,6 +6,7 @@ from test.tts import test_gtts
 from myutil import configutil
 from myutil.logutil import LogUtil
 from test import test_except
+from test import test_tqdm
 
 logger = LogUtil()
 def test_config():
@@ -34,3 +35,4 @@ if __name__ == "__main__":
     elegant_code_style.test_join()
     # test_log()
     test_except.test()
+    test_tqdm.test()
