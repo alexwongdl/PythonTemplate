@@ -3,6 +3,8 @@ Created by Alex Wang on 2017-06-22
 数据预取
 
 example 1:
+    train_input_queue = tf.train.slice_input_producer( [X_train, y_train], shuffle=True, capacity=10 * batch_size)
+    x_batch, y_batch = tf.train.shuffle_batch([train_input_queue[0], train_input_queue[1]], batch_size,  200, 20, num_threads=20)
     coord, threads = data_batch_fetch.start_queue_runner(sess)
     for i in range(10):
         x_value, y_value = sess.run([x_batch, y_batch])
