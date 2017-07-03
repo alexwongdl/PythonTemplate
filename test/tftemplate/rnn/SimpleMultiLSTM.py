@@ -11,10 +11,12 @@ target_train = np.array([[6], [7], [8]])
 x_ = tf.placeholder(tf.float32, [None, data_train.shape[1]])
 y_ = tf.placeholder(tf.float32, [None, 1])
 
-cell = tf.nn.rnn_cell.BasicLSTMCell(num_units=data_train.shape[1])
+cell_one = tf.nn.rnn_cell.BasicLSTMCell(num_units=data_train.shape[1])
+cell_two = tf.nn.rnn_cell.BasicLSTMCell(num_units=data_train.shape[1])
 
-outputs, states = tf.nn.static_rnn(cell, [x_], dtype=tf.float32)
-outputs = outputs[-1]
+networks = tf.nn.rnn_cell.MultiRNNCell([cell_one, cell_two], state_is_tuple=True)
+init_state = networks.zero_state(data_train.shape[0], dtype=tf.float32)
+outputs, states = networks.call(x_, init_state)
 
 W = tf.Variable(tf.random_normal([data_train.shape[1], 1]))
 b = tf.Variable(tf.random_normal([1]))
@@ -25,10 +27,12 @@ cost = tf.reduce_mean(tf.square(y - y_))
 train_op = tf.train.RMSPropOptimizer(0.005, 0.2).minimize(cost)
 
 with tf.Session() as sess:
-    tf.initialize_all_variables().run()
+    tf.global_variables_initializer().run()
     for i in range(EPOCHS):
-        states_value, _ = sess.run([states, train_op], feed_dict={x_: data_train, y_: target_train})
+        outputs_value, states_value, _ = sess.run([outputs, states, train_op],
+                                                  feed_dict={x_: data_train, y_: target_train})
         if i == 10:
+            print("outputs:" + str(outputs_value))
             print(states_value)
             # print(states_value.c.shape)
         if i % PRINT_STEP == 0:
@@ -36,4 +40,6 @@ with tf.Session() as sess:
             print('training cost:', c)
 
     response = sess.run(y, feed_dict={x_: data_train})
+    print(response)
+    response = sess.run(y, feed_dict={x_: [[4, 5, 6, 7, 8], [5, 6, 7, 8, 9], [6, 7, 8, 9, 10]]})
     print(response)
