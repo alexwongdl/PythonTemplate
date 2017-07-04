@@ -18,7 +18,7 @@ cell_two = tf.nn.rnn_cell.BasicLSTMCell(num_units=data_train.shape[1])
 ## LSTM叠加构建网络
 networks = tf.nn.rnn_cell.MultiRNNCell([cell_one, cell_two], state_is_tuple=True)
 init_state = networks.zero_state(data_train.shape[0], dtype=tf.float32)
-outputs, states = networks.call(x_, init_state)  ## outputs:[batch_size, d]  states:(cell_num) * LSTMStateTuple 
+outputs, states = networks.call(x_, init_state)  ## outputs:[batch_size, d]  states:(cell_num) * LSTMStateTuple
 
 W = tf.Variable(tf.random_normal([data_train.shape[1], 1]))
 b = tf.Variable(tf.random_normal([1]))
