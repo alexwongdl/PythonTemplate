@@ -17,7 +17,14 @@ def test_chainmap():
 def test_counter():
     print("test counter...")
     counter_one = collections.Counter("sdfajldjfd")
-    print(counter_one)
+    count_pairs =  sorted(counter_one.items(), key=lambda x:-x[1])
+    words, _ = list(zip(*count_pairs))
+    word_to_id = dict(zip(words, range(len(words))))
+    id_to_word = dict(zip(range(len(words)), words))
+    print(count_pairs)
+    print(words)
+    print(word_to_id)
+    print(id_to_word)
 
 
 def test_ordereddict():

@@ -28,7 +28,7 @@ import tensorflow as tf
 
 def start_queue_runner(sess):
     """
-    启动queue runner
+    启动queue runner，同步多个线程的启动和结束，使用多线程的时候需要用到Coordinator这个类
     :param sess:
     :return: coord, threads
     """
