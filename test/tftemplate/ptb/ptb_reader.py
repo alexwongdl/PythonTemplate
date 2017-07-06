@@ -5,6 +5,7 @@ import tensorflow as tf
 import sys
 import collections
 import os
+from  tfutil import data_batch_fetch
 
 def _read_words(filename):
     """
@@ -67,25 +68,35 @@ def ptb_data_queue(raw_data, batch_size, num_steps):
     data_len = tf.size(raw_data)
     batch_len = data_len // batch_size ## 每一个batch包含的单词个数
     data = tf.reshape(raw_data[0: batch_size * batch_len], [batch_size, batch_len])
-    step_size = (batch_len - 1) // num_steps
-    tf.strided_slice()
+    epoch_size = (batch_len - 1) // num_steps
+
+    index = tf.train.range_input_producer(epoch_size).dequeue()  ##如果没有dequeue，TypeError: unsupported operand type(s) for *: 'FIFOQueue' and 'int'
+    x = tf.strided_slice(data, [0, index * num_steps], [batch_len, (index + 1) * num_steps])
+    y = tf.strided_slice(data, [0, index * num_steps + 1], [batch_len, (index + 1) * num_steps + 1])
+    return x, y
 
 def test_ptb_data_queue():
     data_path = "E://data/ptb/data"
     train_data, test_data, valid_data, word_to_id, id_to_word = ptb_raw_data(data_path)
+    print(len(train_data))
     sess = tf.Session()
     x, y = ptb_data_queue(train_data, batch_size=2000, num_steps=10)
+    coord, threads = data_batch_fetch.start_queue_runner(sess)
     for i in range(10):
         print("round :" + str(i))
         x_value, y_value = sess.run([x,y])
-        x_words = [id_to_word[id] for id in x_value if id in id_to_word]
-        y_words = [id_to_word[id] for id in y_value if id in id_to_word]
-        print("x_words:" + str(x_words))
-        print("y_words:" + str(y_words))
+        for list in x_value:
+            x_words = [id_to_word[id] for id in list if id in id_to_word]
+            print("x_words:" + " ".join(x_words))
+        for list in y_value:
+            y_words = [id_to_word[id] for id in list if id in id_to_word]
+            print("y_words:" + " ".join(y_words))
+    data_batch_fetch.stop_queue_runner(coord, threads)
     sess.close()
 
 if __name__ == "__main__":
     # str_list =_read_words("E://data/ptb/data/ptb.test.txt")
     # for str in str_list:
     #     print(str)
+    test_ptb_data_queue()
 
