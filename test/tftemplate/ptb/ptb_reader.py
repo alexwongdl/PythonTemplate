@@ -28,6 +28,7 @@ def _build_vocab(filename):
     words, _ = list(zip(*count_pairs))
     word_to_id = dict(zip(words, range(len(words))))
     id_to_word = dict(zip(range(len(words)), words))
+    # print(len(word_to_id))  # 10000
     return word_to_id, id_to_word
 
 def _file_to_word_ids(filename, word_to_id):
@@ -85,11 +86,10 @@ def test_ptb_data_queue():
     for i in range(10):
         print("round :" + str(i))
         x_value, y_value = sess.run([x,y])
-        for list in x_value:
-            x_words = [id_to_word[id] for id in list if id in id_to_word]
+        for i in range(len(x_value)):
+            x_words = [id_to_word[id] for id in x_value[i] if id in id_to_word]
             print("x_words:" + " ".join(x_words))
-        for list in y_value:
-            y_words = [id_to_word[id] for id in list if id in id_to_word]
+            y_words = [id_to_word[id] for id in y_value[i] if id in id_to_word]
             print("y_words:" + " ".join(y_words))
     data_batch_fetch.stop_queue_runner(coord, threads)
     sess.close()
