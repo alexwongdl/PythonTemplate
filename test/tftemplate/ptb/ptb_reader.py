@@ -7,13 +7,15 @@ import collections
 import os
 from  tfutil import data_batch_fetch
 
+
 def _read_words(filename):
     """
     :param filename:
     :return: 所有句子连成一个字符串，切分单词构成一个列表
     """
     with open(filename, "r") as f:
-            return f.read().replace("\n", "<eos>").split()
+        return f.read().replace("\n", "<eos>").split()
+
 
 def _build_vocab(filename):
     """
@@ -24,12 +26,13 @@ def _build_vocab(filename):
     """
     str_list = _read_words(filename)
     counter_one = collections.Counter(str_list)
-    count_pairs =  sorted(counter_one.items(), key=lambda x:-x[1])
+    count_pairs = sorted(counter_one.items(), key=lambda x: -x[1])
     words, _ = list(zip(*count_pairs))
     word_to_id = dict(zip(words, range(len(words))))
     id_to_word = dict(zip(range(len(words)), words))
     # print(len(word_to_id))  # 10000
     return word_to_id, id_to_word
+
 
 def _file_to_word_ids(filename, word_to_id):
     """
@@ -41,6 +44,7 @@ def _file_to_word_ids(filename, word_to_id):
     str_list = _read_words(filename)
     word_ids = [word_to_id[word] for word in str_list if word in word_to_id]
     return word_ids
+
 
 def ptb_raw_data(data_path=None):
     """
@@ -57,6 +61,7 @@ def ptb_raw_data(data_path=None):
     valid_data = _file_to_word_ids(valid_path, word_to_id)
     return train_data, test_data, valid_data, word_to_id, id_to_word
 
+
 def ptb_data_queue(raw_data, batch_size, num_steps):
     """
     range_input_producer构造数据输入queu
@@ -67,25 +72,30 @@ def ptb_data_queue(raw_data, batch_size, num_steps):
     """
     raw_data = tf.convert_to_tensor(raw_data, name="raw_data", dtype=tf.int32)
     data_len = tf.size(raw_data)
-    batch_len = data_len // batch_size ## 每一个batch包含的单词个数
+    batch_len = data_len // batch_size  ## 每一个batch包含的单词个数
     data = tf.reshape(raw_data[0: batch_size * batch_len], [batch_size, batch_len])
     epoch_size = (batch_len - 1) // num_steps
 
-    index = tf.train.range_input_producer(epoch_size).dequeue()  ##如果没有dequeue，TypeError: unsupported operand type(s) for *: 'FIFOQueue' and 'int'
+    index = tf.train.range_input_producer(epoch_size,
+                                          num_epochs=None).dequeue()  ##如果没有dequeue，TypeError: unsupported operand type(s) for *: 'FIFOQueue' and 'int'
     x = tf.strided_slice(data, [0, index * num_steps], [batch_len, (index + 1) * num_steps])
     y = tf.strided_slice(data, [0, index * num_steps + 1], [batch_len, (index + 1) * num_steps + 1])
+
     return x, y
+
 
 def test_ptb_data_queue():
     data_path = "E://data/ptb/data"
     train_data, test_data, valid_data, word_to_id, id_to_word = ptb_raw_data(data_path)
     print(len(train_data))
     sess = tf.Session()
-    x, y = ptb_data_queue(train_data, batch_size=2000, num_steps=10)
+    x, y = ptb_data_queue(train_data, batch_size=20, num_steps=10)
     coord, threads = data_batch_fetch.start_queue_runner(sess)
     for i in range(10):
         print("round :" + str(i))
-        x_value, y_value = sess.run([x,y])
+        x_value, y_value = sess.run([x, y])
+        print(len(x_value))
+        # if i % 1000 == 0:
         for i in range(len(x_value)):
             x_words = [id_to_word[id] for id in x_value[i] if id in id_to_word]
             print("x_words:" + " ".join(x_words))
@@ -94,9 +104,9 @@ def test_ptb_data_queue():
     data_batch_fetch.stop_queue_runner(coord, threads)
     sess.close()
 
+
 if __name__ == "__main__":
     # str_list =_read_words("E://data/ptb/data/ptb.test.txt")
     # for str in str_list:
     #     print(str)
     test_ptb_data_queue()
-

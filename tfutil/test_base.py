@@ -24,5 +24,13 @@ def test_reuse_variables():
     sess.close()
     summary_writer.close()
 
+def test_learning_rate():
+    decay_step =10000
+    for i in range(decay_step):
+        decayed_learning_rate = 1.0 * 0.99 ** (i * 1.0 / decay_step)
+        if i % 1000 == 0:
+            print(decayed_learning_rate)
+
 if __name__ == "__main__":
-    test_reuse_variables()
+    # test_reuse_variables()
+    test_learning_rate()
