@@ -6,6 +6,8 @@ import numpy as np
 # from ptb_reader import ptb_raw_data
 from test.tftemplate.ptb.ptb_reader import ptb_raw_data
 from test.tftemplate.ptb.ptb_reader import ptb_data_queue
+# from ptb_reader import ptb_raw_data
+# from ptb_reader import ptb_data_queue
 from  tfutil import data_batch_fetch
 
 params = {
