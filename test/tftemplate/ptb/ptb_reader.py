@@ -86,6 +86,7 @@ def ptb_data_queue(raw_data, batch_size, num_steps):
 
 def test_ptb_data_queue():
     data_path = "E://data/ptb/data"
+    data_path = "/home/recsys/hzwangjian1/learntf/ptb_data"
     train_data, test_data, valid_data, word_to_id, id_to_word = ptb_raw_data(data_path)
     print(len(train_data))
     sess = tf.Session()
