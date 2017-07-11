@@ -20,6 +20,7 @@ def test_chainmap():
 
 
 def test_counter():
+    
     print("test counter...")
     counter_one = Counter("sdfajldjfd")
     print(counter_one.most_common(3))
