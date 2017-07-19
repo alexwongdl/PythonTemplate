@@ -23,15 +23,15 @@ class IndexHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     @tornado.gen.coroutine
     def get(self):
-        greeting = self.get_argument('greeting', 'Hello')
-        res = yield self.my_func()
-        self.write(greeting + ', friendly user!' + str(res))
+        num = self.get_argument('num', 2)
+        res = yield self.my_func(num)
+        self.write('result is:' + str(res))
 
     # 线程里处理
     @run_on_executor
-    def my_func(self):
+    def my_func(self, num):
         for i in range(10000):
-            data = self.sess.run([asquare], feed_dict={a: 2})
+            data = self.sess.run([asquare], feed_dict={a: num})
         return data
 
 if __name__ == "__main__":
