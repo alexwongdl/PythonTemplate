@@ -1,3 +1,9 @@
+"""
+Created by Alex.Wang
+on 20170721
+
+Tornado + Tensorflow 多线程
+"""
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
@@ -6,7 +12,9 @@ from tornado.options import define
 from concurrent.futures import ThreadPoolExecutor
 from tornado.concurrent import run_on_executor
 import time
+import os
 
+os.environ["CUDA_VISIBLE_DEVICES"]=""
 define("port", default=18015, help="run on the given port", type=int)
 
 import tensorflow as tf

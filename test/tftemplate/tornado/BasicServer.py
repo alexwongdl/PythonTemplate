@@ -1,3 +1,9 @@
+"""
+Created by Alex.Wang
+on 20170721
+
+Tornado + Tensorflow 单线程
+"""
 import tornado.httpserver
 import tornado.ioloop
 import tornado.options
@@ -16,9 +22,10 @@ class IndexHandler(tornado.web.RequestHandler):
         self.sess = sess
 
     def get(self):
-        greeting = self.get_argument('greeting', 'Hello')
-        print(self.sess.run([asquare], feed_dict={a: 2}))
-        self.write(greeting + ', friendly user!')
+        num = self.get_argument('num', 2)
+        for i in range (100):
+            ret = self.sess.run([asquare], feed_dict={a: num})
+        self.write( 'result:' + str(ret))
 
 if __name__ == "__main__":
     tornado.options.parse_command_line()
@@ -27,6 +34,6 @@ if __name__ == "__main__":
     http_server.listen(18824)
     tornado.ioloop.IOLoop.current().start()
 
-    #http_server.bind(18825)
-    #http_server.start(3)
-    #tornado.ioloop.IOLoop.current().start()
+    # http_server.bind(18825)
+    # http_server.start(0)
+    # tornado.ioloop.IOLoop.current().start()
