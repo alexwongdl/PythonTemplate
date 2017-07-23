@@ -73,6 +73,7 @@ class PTBModel():
         self.predict = tf.arg_max(self.logits, 2)
         self.cost = tf.reduce_sum(self.loss)
 
+
         ## 梯度操作
         self._lr = tf.placeholder(tf.float32, shape=[], name="learning_rate")
         tvars = tf.trainable_variables()
