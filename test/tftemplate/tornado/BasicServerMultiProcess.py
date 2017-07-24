@@ -2,7 +2,15 @@
 Created by Alex.Wang
 on 20170721
 
-Tornado + Tensorflow 单线程
+Tornado + Tensorflow 多进程失败
+You may only use fork-safe libraries before entering multi-process mode (by calling http_server.start(N)).
+Many complex libraries are not fork-safe.
+You must either move the initialization of tensorflow.Session() after the HTTP server is started (in which case you will have 10 sessions, one in each process),
+or you can create a separate tensorflow server and connect to it using the target argument of tensorflow.Session (sessions with a target are fork-safe).
+The latter option is described in tensorflow/tensorflow#2448
+
+my recommendation is to not use multi-process mode and always use an external process manager and load balancer instead. then you don't have to do anything special and everything will naturally be one-per-process
+if you still want to use multi-process mode, just rearrange things so the call to HTTPServer.start comes before the creation of the tensorflow session
 """
 import tornado.httpserver
 import tornado.ioloop
