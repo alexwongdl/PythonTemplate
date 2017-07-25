@@ -1,5 +1,7 @@
 import os
 
+import sys
+
 from myutil import stringutil
 from test import elegant_code_style
 from test.tts import test_gtts
@@ -7,6 +9,11 @@ from myutil import configutil
 from myutil.logutil import LogUtil
 from test import test_except
 from test import test_tqdm
+
+# 获取当前路径并切换到当前目录
+cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.append(cwd)
+os.chdir(cwd)
 
 logger = LogUtil()
 def test_config():
