@@ -1,0 +1,5 @@
+flask: pip install Flask    from flask import Flask
+pymysql: pip install pymysql    import pymysql
+opevncv: pip install xxx.wheel
+    win:http://www.lfd.uci.edu/~gohlke/pythonlibs/#opencv
+    linux:https://pypi.python.org/pypi/opencv-contrib-python/3.2.0.7
