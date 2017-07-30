@@ -1,12 +1,13 @@
 """
 Created by Alex Wang
-on 2017-07-26
-flask服务，默认是阻塞非异步的
+on 2017-07-30
+非阻塞异步flask服务
 """
-
 import os
-
+from gevent import monkey
+monkey.patch_all()
 from flask import Flask, request
+from gevent import wsgi
 import tensorflow as tf
 
 os.environ["CUDA_VISIBLE_DEVICES"] = ""
@@ -15,10 +16,12 @@ asquare = tf.multiply(a, a, name="output")
 sess = tf.Session()
 
 app = Flask(__name__)
-@app.route('/')
-def hello_world():
-    return "Hellow World"
 
+@app.route('/')
+def index():
+    return 'Hello World'
+
+@app.route('/hello')
 def response_request():
     num = request.args.get('num')
     for i in range (100):
@@ -26,7 +29,6 @@ def response_request():
     return str(ret)
     # return "hello"
 
-
 if __name__ == "__main__":
-    app.add_url_rule("/hello", view_func=response_request)
-    app.run(host='127.0.0.1',port=18998, debug=True)
+    server = wsgi.WSGIServer(('127.0.0.1', 19877), app)
+    server.serve_forever()

@@ -1,8 +1,8 @@
 [db]
-db_host = 127.0.0.1
-db_port = 22
-db_user = root
-db_pass = rootroot
+db_host=10.200.131.176
+db_port=4331
+db_user=recsys
+db_pass=oJyKfrdT9AI9
 
 [concurrent]
 thread = 10

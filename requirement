@@ -8,3 +8,7 @@ xgboost:
     linux:https://xgboost.readthedocs.io/en/latest/build.html#building-on-ubuntu-debian
 scikit-learn:pip install -U scikit-learn
 ffmpeg:
+
+flask:pip install flask
+gevent:pip install gevent
+gunicorn:pip install gunicorn
