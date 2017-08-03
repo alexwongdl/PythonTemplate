@@ -36,8 +36,21 @@ def test_list_files():
         if os.path.isfile(os.path.join(root,file)):
             print(file)
 
+def test_delete():
+    """
+    os.rmdir：删除空目录，目录不为空时抛出异常
+    os.remove：删除文件，如果是一个目录，抛出异常
+    :return:
+    """
+    dir_path = 'E://temp/videoquality/test'
+    os.rmdir(dir_path)
+
+    file_path = 'E://temp/videoquality/test.txt'
+    os.remove(file_path)
+
 
 if __name__ == "__main__":
     # test_basename()
     # iterate_path()
     test_list_files()
+    # test_delete()
