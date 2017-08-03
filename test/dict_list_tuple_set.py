@@ -1,8 +1,23 @@
-'''
-Created on 2017-05-12
-@author:Alex Wang
-'''
+"""
+Created by Alex Wang
+on 2017-07-26
+"""
 
+def test_dict_update():
+    info = dict({"name": "Alex Wang", "age": 18})
+    info.update({"gender": "male"})
+    print(info)
+
+def test_dict_create():
+    info = [("A", 1),("B", 2),("C", 3)]
+    info_dict = {row[0]: row for row in info}
+    print(info_dict)
+
+    dict_one = {}
+    dict_one['a'] = 1
+    dict_one['b'] = 2
+    dict_one['c'] = 3
+    print(dict_one)
 
 def test_slice_sequence():
     '''
@@ -52,7 +67,8 @@ def test_sort1():
     print(x)
     print(y)
 
-if __name__ == "__main__":
-    # test_slice_sequence()
+if __name__ == "__main__" :
+    test_dict_update()
+    test_dict_create()
     test_sort()
     test_sort1()
