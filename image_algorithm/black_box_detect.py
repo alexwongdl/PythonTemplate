@@ -15,8 +15,8 @@ def row_black_box(image, threshold, diff):
     nCol = image.shape[1]
     left = -1
     right = nCol
-    step = int(nCol/10) # 只检查10行
-    for i in range(0, nRow-1, step):
+    step = int(nRow/30) # 只检查10行
+    for i in range(int(nRow/3), int(nRow/3*2), step):
         curLeft = -1
         curRight = nCol
         for j in range(0,nCol-1):
@@ -37,6 +37,8 @@ def row_black_box(image, threshold, diff):
 
     if min(left,right)>=1 and abs((left+1)-(nCol-right))<=diff and right-left>0 :
         return left, right
+    elif min(left, (nCol-right)) >= 20:
+        return min(left, (nCol-right)), min(left, (nCol-right))
     return -1,-1
 
 def col_black_box(image, threshold, diff):
@@ -50,8 +52,8 @@ def col_black_box(image, threshold, diff):
     nCol = image.shape[1]
     topper = -1
     buttom = nRow
-    step = int(nCol/10)
-    for i in range(0, nCol-1, step):
+    step = int(nCol/30)
+    for i in range(int(nCol/3), int(nCol/3*2), step):
         curTopper = -1
         curButtom = nRow
         for j in range(0,nRow-1):
@@ -72,4 +74,7 @@ def col_black_box(image, threshold, diff):
 
     if min(topper,buttom)>=1 and abs((topper+1)-(nRow-buttom))<=diff and buttom-topper>0 :
         return topper, buttom
+    elif min(topper,(nRow-buttom))>=20:
+        return min(topper,(nRow-buttom)), min(topper,(nRow-buttom))
+
     return -1,-1
