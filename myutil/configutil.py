@@ -18,6 +18,31 @@ processor = 20
 import configparser
 
 def get_value(path, section, key):
+    """
+    读取配置文件
+    :param path:
+    :param section:
+    :param key:
+    :return:
+    """
     config = configparser.ConfigParser()
     config.read(path)
     return config.get(section, key)
+
+def set_value(path, section, key, value):
+    """
+    更新配置文件
+    :param path:
+    :param section:
+    :param key:
+    :param value:
+    :return:
+    """
+    config = configparser.ConfigParser()
+    config.read(path)
+    sections = config.sections()
+    if not sections.__contains__(section):
+        config.add_section(section)
+    config.set(section, key, value)
+    config.write(open(path, 'w'))
+

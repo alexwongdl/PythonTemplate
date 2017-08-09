@@ -49,8 +49,14 @@ def test_delete():
     os.remove(file_path)
 
 
+def current_dir():
+    print(os.path.abspath(__file__))
+    cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  ##当前目录的上一级
+    print(cwd)
+
 if __name__ == "__main__":
     # test_basename()
     # iterate_path()
     test_list_files()
     # test_delete()
+    current_dir()

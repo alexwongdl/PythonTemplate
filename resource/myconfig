@@ -1,9 +1,0 @@
-[db]
-db_host=10.200.131.176
-db_port=4331
-db_user=recsys
-db_pass=oJyKfrdT9AI9
-
-[concurrent]
-thread = 10
-processor = 20

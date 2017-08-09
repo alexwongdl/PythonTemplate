@@ -9,11 +9,12 @@ from myutil import configutil
 from myutil.logutil import LogUtil
 from test import test_except
 from test import test_tqdm
+from myutil import dateutil
 
 # 获取当前路径并切换到当前目录
-cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.append(cwd)
-os.chdir(cwd)
+# cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# sys.path.append(cwd)
+# os.chdir(cwd)
 
 logger = LogUtil()
 def test_config():
@@ -22,6 +23,8 @@ def test_config():
     path = os.path.join(os.getcwd(),"resource\myconfig")
     print(configutil.get_value(path, "db", "db_user"))
     print(len(configutil.get_value(path, "db", "db_user")))
+
+    configutil.set_value(path, 'timerecord', 'start_time', dateutil.current_date_format())
 
 def test_log():
     logger.info("test_logger_info")
