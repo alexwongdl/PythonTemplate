@@ -67,8 +67,15 @@ def test_sort1():
     print(x)
     print(y)
 
+def test_dict_contain():
+    tid_level_map = {2:1.1, 8:1.05, 3:1.0, 4:0.8}
+    definition_map = {'sd':0.97, 'hd':1.0, 'shd':1.05}
+    if tid_level_map.__contains__(3):
+        print('contain')
+
 if __name__ == "__main__" :
     test_dict_update()
     test_dict_create()
     test_sort()
     test_sort1()
+    test_dict_contain()

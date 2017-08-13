@@ -36,6 +36,13 @@ def test_list_files():
         if os.path.isfile(os.path.join(root,file)):
             print(file)
 
+def test_file_exist():
+    root = 'E://temp/videoquality/abc'
+    if os.path.isdir(root):
+        print('file exists')
+    else:
+        print('file not exists')
+
 def test_delete():
     """
     os.rmdir：删除空目录，目录不为空时抛出异常
@@ -50,7 +57,8 @@ def test_delete():
 
 
 def current_dir():
-    print(os.path.abspath(__file__))
+    print(os.getcwd()) ##当前目录
+    print(os.path.abspath(__file__)) ##当前文件
     cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  ##当前目录的上一级
     print(cwd)
 
@@ -60,3 +68,4 @@ if __name__ == "__main__":
     test_list_files()
     # test_delete()
     current_dir()
+    test_file_exist()

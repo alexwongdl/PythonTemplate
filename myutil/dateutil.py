@@ -41,6 +41,9 @@ def kdays_ago_day_format(kdays):
     kdays_ago_date = datetime.datetime.now() - datetime.timedelta(days=kdays)
     return kdays_ago_date.strftime("%Y-%m-%d")
 
+def time_delta_date_format(kdays = 0, khours = 0, kmins = 0, ksec = 0):
+    new_time = datetime.datetime.now() + datetime.timedelta(days = kdays, hours = khours, minutes=kmins, seconds=ksec)
+    return new_time.strftime("%Y-%m-%d %H:%M:%S")
 
 if __name__ == "__main__":
     print(current_date_format())
@@ -48,3 +51,5 @@ if __name__ == "__main__":
 
     print(kdays_ago_date_format(5))
     print(kdays_ago_day_format(5))
+
+    print(time_delta_date_format(khours=-2, ksec=-4))
