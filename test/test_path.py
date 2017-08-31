@@ -63,9 +63,9 @@ def current_dir():
     print(cwd)
 
 if __name__ == "__main__":
-    # test_basename()
+    test_basename()
     # iterate_path()
-    test_list_files()
+    # test_list_files()
     # test_delete()
-    current_dir()
-    test_file_exist()
+    # current_dir()
+    # test_file_exist()
