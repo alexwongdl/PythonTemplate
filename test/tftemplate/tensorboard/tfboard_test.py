@@ -9,7 +9,7 @@ def test_board():
 
     constant_one = tf.Variable([1.0, 1.0], name="constant_one")
     var_one = tf.Variable(initial_value=[1.0, 2.0], name="var_one")
-    summary_writer = tf.summary.FileWriter("E://workspace/python/tensorboard/log", sess.graph)
+    summary_writer = tf.summary.FileWriter("E://workspace/python/tensorboard/log", sess.graph)   ####TODO: WARN 必须要加sess.graph
 
     tf.summary.tensor_summary(var_one.op.name, var_one)
     summary_op = tf.summary.merge_all()
