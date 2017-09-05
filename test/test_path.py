@@ -3,7 +3,7 @@ Created by Alex Wang
 on 2017-08-03
 """
 import os
-
+import hashlib
 
 def test_basename():
     """
@@ -61,6 +61,18 @@ def current_dir():
     print(os.path.abspath(__file__)) ##当前文件
     cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  ##当前目录的上一级
     print(cwd)
+
+def dir_clear(dir_path):
+    """
+    清空一个目录
+    :param dir_path:
+    :return:
+    """
+    for file in os.listdir(dir_path):
+        if os.path.isfile(os.path.join(dir_path,file)):
+            os.remove(os.path.join(dir_path,file))
+
+
 
 if __name__ == "__main__":
     test_basename()

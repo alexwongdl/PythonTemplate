@@ -2,7 +2,7 @@
 Created by hzwangjian1
 on 2017-08-04
 """
-
+import hashlib
 def test():
     start = 0
     end  = 33
@@ -25,7 +25,19 @@ def test_assign():
     print(a)
     print(c)
 
+def phog_dim():
+    with open('E://temp/docduplicate/recallOpt/temp.txt','r') as rhandler:
+        line = rhandler.readline()
+        sub_strs = line.split(',')
+        print(len(sub_strs))
+
+def test_md5_hexdigest():
+    signature = hashlib.md5(('0c8dd438-1e78-428f-b4c9-42cf41c13dcb' + "2017-09-01 12:00:00").encode()).hexdigest()
+    print(signature)
+
 if __name__=="__main__":
     test()
     test_split()
     test_assign()
+    phog_dim()
+    test_md5_hexdigest()
