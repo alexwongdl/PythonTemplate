@@ -3,7 +3,12 @@ Created by Alex Wang
 On 2017-08-31
 """
 import requests
+import json
 
+import logging
+
+logging.getLogger("requests").setLevel(logging.WARNING)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 def image_download(url, save_path):
     """
@@ -64,6 +69,14 @@ def send_post_content(url, params=None):
 
 if __name__ == "__main__":
     # image_download('http://dmr.nosdn.127.net/v-20170826-6b05cdaa733282703f729b5afcc65759.jpg','E://temp/docduplicate/image/v-20170826-6b05cdaa733282703f729b5afcc65759.jpg')
-    params = {'picUrl': 'http://img1.gtimg.com/20/2015/201558/20155894_980x1200_281.jpg'}
-    get_response = send_post_content('http://nlp.service.163.org/cv-api-logo/watermarker_detect', params)
-    print(get_response)
+
+    # params = {'picUrl': 'http://img1.gtimg.com/20/2015/201558/20155894_980x1200_281.jpg'}
+    # response = send_post_content('http://nlp.service.163.org/cv-api-logo/watermarker_detect', params)
+    # print(response)
+
+    title_cheat_url = 'http://nlp.service.163.org/dl-nlp-news/titlecheat_detect_article'
+    params = {"title":"孙悟空被压五指山，菩提法师为啥不救他？背后原因吓人", "category":"人文"}
+    response = send_post_content(title_cheat_url, params)
+    print(response)
+    response_json = json.loads(response)
+    print(response_json['body']['finalMark'])
