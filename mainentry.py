@@ -11,7 +11,7 @@ from test import test_except
 from test import test_tqdm
 from myutil import dateutil
 
-# 获取当前路径并切换到当前目录
+# 获取当前路径并添加到系统path
 # cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # sys.path.append(cwd)
 # os.chdir(cwd)

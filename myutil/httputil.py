@@ -80,3 +80,10 @@ if __name__ == "__main__":
     print(response)
     response_json = json.loads(response)
     print(response_json['body']['finalMark'])
+
+    sansu_url = 'http://nlp.service.163.org/news-api/vulgarity_quant_article'
+    params = {"title":"美国怪兽车大赛 一名车手的表演燃爆全场", "category":"搞笑", 'docid':'VCSAT9DI8', 'content': '','source':'总有刁民想害朕'}
+    response = send_post_content(sansu_url, params)
+    print(response)
+    response_json = json.loads(response)
+    print(response_json['body']['serverity'])

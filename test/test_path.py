@@ -79,5 +79,5 @@ if __name__ == "__main__":
     # iterate_path()
     # test_list_files()
     # test_delete()
-    # current_dir()
+    current_dir()
     # test_file_exist()
