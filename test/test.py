@@ -35,9 +35,72 @@ def test_md5_hexdigest():
     signature = hashlib.md5(('0c8dd438-1e78-428f-b4c9-42cf41c13dcb' + "2017-09-01 12:00:00").encode()).hexdigest()
     print(signature)
 
+def list_rerange(list_org):
+    lennth = len(list_org)
+    times_4 = []
+    times_2 = []
+    times_1 = []
+    for item in list_org:
+        if item % 4 == 0:
+            times_4.append(item)
+        elif item % 2 == 0:
+            times_2.append(item)
+        else:
+            times_1.append(item)
+    print((times_4))
+    print((times_2))
+    print((times_1))
+
+    len_times_4 = len(times_4)
+    len_times_2 = len(times_2)
+    len_times_1 = len(times_1)
+
+    if len_times_2 == 0 and len_times_1 == 0: #1 和 2都没有
+        return True
+
+    if len_times_2 == 0: ## 没有2有1
+        if len_times_4 * 2 >= len_times_1: ## 4的个数是1的个数的两倍
+            return True
+        else :
+            return False
+    if len_times_1 == 0 : ## 没有1有2
+        if len_times_2 % 2 == 0: ## 2个2
+            return True
+        else: ## 1个2
+            if len_times_4 > 0:
+                return True
+            else:
+                return False
+
+    ## 1和2都有
+    if len_times_2 % 2 == 0: ## 2的个数是偶数
+        if len_times_4 * 2 > len_times_1: ## 4的个数是1的个数的两倍
+            return True
+        else :
+            return False
+    else:  ## 2的个数是奇数,相同
+        if len_times_4 * 2 > len_times_1:## 4的个数是1的个数的两倍
+            return True
+        else :
+            return False
+
+
 if __name__=="__main__":
-    test()
-    test_split()
-    test_assign()
-    phog_dim()
-    test_md5_hexdigest()
+    # test()
+    # test_split()
+    # test_assign()
+    # phog_dim()
+    # test_md5_hexdigest()
+    print(list_rerange([8])) #没有1和2
+    print("===============================")
+    print(list_rerange([2,3,5,7,8,6]))  #有1和2
+    print("===============================")
+    print(list_rerange([3,5,8])) #没有2
+    print("===============================")
+    print(list_rerange([2])) #没有1
+    print("===============================")
+    print(list_rerange([2,3,8,6]))  #有1和2
+    print("===============================")
+    print(list_rerange([1,4,1,4,1,4,1]))  #有1和2
+    print("===============================")
+    print(list_rerange([]))
