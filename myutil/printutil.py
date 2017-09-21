@@ -65,9 +65,7 @@ def mod_print(message, fg=ANSI_WHITE, bg=ANSI_BLACK_BACKGROUND, mod=MOD_DEFAULT)
     :param mod:
     :return:
     """
-    print('\033[{};{};{}m'.format(fg, bg, mod))
-    print(message)
-    print('\033[0m')
+    print('\033[{};{};{}m'.format(fg, bg, mod) + message + '\033[0m')
 
 def test():
     print('\033[1;32;40m')
