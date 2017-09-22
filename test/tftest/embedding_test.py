@@ -17,7 +17,7 @@ def test_embedding_lookup():
     x = tf.nn.embedding_lookup(matrix, ids)
     x_value = sess.run([x])
     print(x_value)
-    tf.nn.softmax()
+    # tf.nn.softmax()
 
 if __name__ == "__main__":
     test_embedding_lookup()
