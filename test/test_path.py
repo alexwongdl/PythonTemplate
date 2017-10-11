@@ -72,8 +72,6 @@ def dir_clear(dir_path):
         if os.path.isfile(os.path.join(dir_path,file)):
             os.remove(os.path.join(dir_path,file))
 
-
-
 if __name__ == "__main__":
     test_basename()
     # iterate_path()

@@ -68,7 +68,7 @@ def file_exist(file_path):
     :param file_path:
     :return:
     """
-    if os.path.isdir(file_path):
+    if os.path.isfile(file_path):
         return True
     else:
         return False

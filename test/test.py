@@ -84,7 +84,6 @@ def list_rerange(list_org):
         else :
             return False
 
-
 if __name__=="__main__":
     # test()
     # test_split()
