@@ -84,6 +84,14 @@ def list_rerange(list_org):
         else :
             return False
 
+import scipy.misc as sic
+import numpy as np
+def test_png():
+    im = sic.imread("E://temp/videoquality/heibian_keyframe_small/VAPS2EQ4T_544_960_KF_012.png")
+    im = sic.imread("E://temp/deblur/images/r5e7ce087t.png")
+    print(im.shape)
+    print(im[50][:][:])
+
 if __name__=="__main__":
     # test()
     # test_split()
@@ -103,3 +111,5 @@ if __name__=="__main__":
     print(list_rerange([1,4,1,4,1,4,1]))  #有1和2
     print("===============================")
     print(list_rerange([]))
+
+    test_png()
