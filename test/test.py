@@ -92,6 +92,22 @@ def test_png():
     print(im.shape)
     print(im[50][:][:])
 
+from myutil import httputil
+import os
+def load_imgs():
+    output_dir = "E://temp/deblur/imags_dir"
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+    with open('E://temp/deblur/video_article_pic', 'r') as fin:
+        line = fin.readline()
+        print(line)
+        while line:
+            substrs = line.split("\t")
+            docid, url = substrs[0], substrs[1]
+            save_path = os.path.join(output_dir, docid + '.jpg')
+            httputil.image_download(url, save_path)
+            line = fin.readline()
+
 if __name__=="__main__":
     # test()
     # test_split()
@@ -112,4 +128,4 @@ if __name__=="__main__":
     print("===============================")
     print(list_rerange([]))
 
-    test_png()
+    load_imgs()
