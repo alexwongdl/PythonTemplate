@@ -1,3 +1,4 @@
+# coding: utf-8
 '''
 Created on 2017-05-16
 @author:Alex Wang

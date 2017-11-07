@@ -1,3 +1,4 @@
+# coding: utf-8
 """
 Created by Alex.W.
 On 2017-08-07
