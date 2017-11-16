@@ -46,3 +46,6 @@ if __name__ == "__main__":
     # test_log()
     test_except.test()
     test_tqdm.test()
+
+    # if sys.argv[1] == 'mproc':
+    #     main_parallel()

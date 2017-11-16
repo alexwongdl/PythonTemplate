@@ -22,7 +22,7 @@ def row_black_box(image, threshold, diff):
         curRight = nCol
         for j in range(0,nCol-1):
             if(sum(list(image[i,j]))<=threshold and curLeft == j-1):
-                curLeft += 1
+                curLeft += 2
         if left == -1:
             left = curLeft
         if curLeft < left:
@@ -30,7 +30,7 @@ def row_black_box(image, threshold, diff):
 
         for j in range(nCol-1,0,-1):
             if(sum(list(image[i,j]))<=threshold and curRight == j+1):
-                curRight -= 1
+                curRight -= 2
         if right == nCol:
             right = curRight
         if curRight > right:
@@ -59,7 +59,7 @@ def col_black_box(image, threshold, diff):
         curButtom = nRow
         for j in range(0,nRow-1):
             if(sum(list(image[j,i]))<=threshold and curTopper == j-1):
-                curTopper += 1
+                curTopper += 2
         if topper == -1:
             topper = curTopper
         if curTopper < topper:
@@ -67,7 +67,7 @@ def col_black_box(image, threshold, diff):
 
         for j in range(nRow-1,0,-1):
             if(sum(list(image[j,i]))<=threshold and curButtom == j+1):
-                curButtom -= 1
+                curButtom -= 2
         if buttom == nRow:
             buttom = curButtom
         if curButtom > buttom:
