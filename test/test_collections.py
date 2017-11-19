@@ -60,7 +60,17 @@ def test_userlist():
 def test_userstring():
     print("test userstring...")
 
+def test_dict_sort():
+    """
+    字典按照value值排序
+    :return:
+    """
+    dict_one = {'a':5,'b':10, 'c':3, 'd':6, 'e':6}
+    print(dict_one.items())
+    sorted_one = sorted(dict_one.items(), key=lambda x: x[1], reverse=True)
+    print([x[0] for x in sorted_one])
 
 if __name__ == "__main__":
     test_counter()
-    # test_ordereddict()
+    test_ordereddict()
+    test_dict_sort()
