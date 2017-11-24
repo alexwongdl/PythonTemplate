@@ -25,3 +25,7 @@ def test_tqdm():
         pbar.update(10)
         time.sleep(0.1)
     pbar.close()
+
+
+if __name__ == '__main__':
+    test()
