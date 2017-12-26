@@ -67,6 +67,17 @@ def test_sort1():
     print(x)
     print(y)
 
+def dict_sort_by_value():
+    """
+    字典按照value值倒序输出
+    :return:
+    """
+    a1 = {'a':1, 'b':13, 'd':4, 'c':2, 'e':30}
+    a1_sorted_keys = sorted(a1, key=a1.get, reverse=True)
+    for key in a1_sorted_keys:
+        print (key, a1[key])
+
+
 def test_dict_contain():
     tid_level_map = {2:1.1, 8:1.05, 3:1.0, 4:0.8}
     definition_map = {'sd':0.97, 'hd':1.0, 'shd':1.05}
@@ -79,3 +90,4 @@ if __name__ == "__main__" :
     test_sort()
     test_sort1()
     test_dict_contain()
+    dict_sort_by_value()
