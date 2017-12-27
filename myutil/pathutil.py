@@ -28,14 +28,14 @@ def list_dirs(path):
     :param path:
     :return:
     """
-    dir_obs_list = [] # 绝对路径
+    dir_abs_list = [] # 绝对路径
     dir_list = []  # 相对路径
     for file in os.listdir(path):
-        obs_file_path = os.path.join(path, file)
-        if os.path.isdir(obs_file_path):
-            dir_obs_list.append(obs_file_path)
+        abs_file_path = os.path.join(path, file)
+        if os.path.isdir(abs_file_path):
+            dir_abs_list.append(abs_file_path)
             dir_list.append(file)
-    return dir_obs_list, dir_list
+    return dir_abs_list, dir_list
 
 def list_files(path):
     """
@@ -43,14 +43,14 @@ def list_files(path):
     :param path:
     :return:
     """
-    file_obs_list = [] # 绝对路径
+    file_abs_list = [] # 绝对路径
     file_list = []  # 相对路径
     for file in os.listdir(path):
-        obs_file_path = os.path.join(path, file)
-        if os.path.isfile(obs_file_path):
-            file_obs_list.append(obs_file_path)
+        abs_file_path = os.path.join(path, file)
+        if os.path.isfile(abs_file_path):
+            file_abs_list.append(abs_file_path)
             file_list.append(file)
-    return file_obs_list, file_list
+    return file_abs_list, file_list
 
 def dir_exist(dir_path):
     """
@@ -84,12 +84,12 @@ if __name__ == "__main__":
     print("__main__")
     print(get_basename('http://flv3.bn.netease.com/videolib3/1707/24/HhsvJ4943/HD/HhsvJ4943-mobile.mp4'))
 
-    dir_obs_list, dir_list = list_dirs('E://workspace/gitlab')
-    print(", ".join(dir_obs_list))
+    dir_abs_list, dir_list = list_dirs('E://workspace/gitlab')
+    print(", ".join(dir_abs_list))
     print(", ".join(dir_list))
 
-    file_obs_list, file_list = list_files('E://workspace/gitlab')
-    print(", ".join(file_obs_list))
+    file_abs_list, file_list = list_files('E://workspace/gitlab')
+    print(", ".join(file_abs_list))
     print(", ".join(file_list))
 
     test_current_dir()
