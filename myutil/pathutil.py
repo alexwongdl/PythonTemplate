@@ -4,6 +4,7 @@ Created by Alex Wang
 On 20170922
 """
 import os
+import shutil
 
 def get_basename(path):
     """
@@ -18,9 +19,18 @@ def dir_clear(dir_path):
     :param dir_path:
     :return:
     """
-    for file in os.listdir(dir_path):
-        if os.path.isfile(os.path.join(dir_path,file)):
-            os.remove(os.path.join(dir_path,file))
+    # for file in os.listdir(dir_path):
+    #     if os.path.isfile(os.path.join(dir_path,file)):
+    #         os.remove(os.path.join(dir_path,file))
+    for the_file in os.listdir(dir_path):
+        file_path = os.path.join(dir_path, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):  # 递归删除目录
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print(e)
 
 def list_dirs(path):
     """
@@ -73,6 +83,15 @@ def file_exist(file_path):
         return True
     else:
         return False
+
+def mkdir_is_not_exist(dir_name):
+    """
+    创建目录
+    Python 3.2+
+    :param dir_name:
+    :return:
+    """
+    os.makedirs(path, exist_ok=True)
 
 def test_current_dir():
     print(os.getcwd()) ##当前目录
