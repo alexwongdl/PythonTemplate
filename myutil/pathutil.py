@@ -84,14 +84,14 @@ def file_exist(file_path):
     else:
         return False
 
-def mkdir_is_not_exist(dir_name):
+def mkdir_if_not_exist(dir_name):
     """
     创建目录
     Python 3.2+
     :param dir_name:
     :return:
     """
-    os.makedirs(path, exist_ok=True)
+    os.makedirs(dir_name, exist_ok=True)
 
 def test_current_dir():
     print(os.getcwd()) ##当前目录
@@ -112,3 +112,4 @@ if __name__ == "__main__":
     print(", ".join(file_list))
 
     test_current_dir()
+    mkdir_if_not_exist('E://workspace/tmp/test_python_mkdir')
