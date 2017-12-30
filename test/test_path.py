@@ -4,6 +4,8 @@ on 2017-08-03
 """
 import os
 import hashlib
+import sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_basename():
     """

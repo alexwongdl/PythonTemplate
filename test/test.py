@@ -128,4 +128,21 @@ if __name__=="__main__":
     print("===============================")
     print(list_rerange([]))
 
+    digit_list = [1,2,7,4,5]
+    del digit_list[3]
+    print(digit_list)
+    print(digit_list[1:3])
+    a,b = [],[]
+    a.append(1)
+    print('a:')
+    print(a)
+    a.extend([0]*3)
+    print(a)
+    a.extend([0]*0)
+    print(a)
+
+    print('sum a:')
+    a = [[1,2,3],[11,12,13]]
+    b = sum(a[0])
+    print(b)
     # load_imgs()
