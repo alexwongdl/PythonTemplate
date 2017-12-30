@@ -5,6 +5,7 @@ Created on 2017-5-25
 '''
 import logging
 
+
 class LogUtil:
     def __init__(self, log_path="info.log"):
         logging.basicConfig(level=logging.DEBUG,
@@ -32,4 +33,5 @@ class LogUtil:
     def warning(self, msg):
         logging.warning(msg)
 
-
+# TODO:所有其他模块使用该logger
+logger = LogUtil(log_path='info.log')

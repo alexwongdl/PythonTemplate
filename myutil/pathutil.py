@@ -4,6 +4,7 @@ Created by Alex Wang
 On 20170922
 """
 import os
+import shutil
 
 def get_basename(path):
     """
@@ -18,9 +19,18 @@ def dir_clear(dir_path):
     :param dir_path:
     :return:
     """
-    for file in os.listdir(dir_path):
-        if os.path.isfile(os.path.join(dir_path,file)):
-            os.remove(os.path.join(dir_path,file))
+    # for file in os.listdir(dir_path):
+    #     if os.path.isfile(os.path.join(dir_path,file)):
+    #         os.remove(os.path.join(dir_path,file))
+    for the_file in os.listdir(dir_path):
+        file_path = os.path.join(dir_path, the_file)
+        try:
+            if os.path.isfile(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):  # 递归删除目录
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print(e)
 
 def list_dirs(path):
     """
@@ -28,14 +38,14 @@ def list_dirs(path):
     :param path:
     :return:
     """
-    dir_obs_list = [] # 绝对路径
+    dir_abs_list = [] # 绝对路径
     dir_list = []  # 相对路径
     for file in os.listdir(path):
-        obs_file_path = os.path.join(path, file)
-        if os.path.isdir(obs_file_path):
-            dir_obs_list.append(obs_file_path)
+        abs_file_path = os.path.join(path, file)
+        if os.path.isdir(abs_file_path):
+            dir_abs_list.append(abs_file_path)
             dir_list.append(file)
-    return dir_obs_list, dir_list
+    return dir_abs_list, dir_list
 
 def list_files(path):
     """
@@ -43,14 +53,14 @@ def list_files(path):
     :param path:
     :return:
     """
-    file_obs_list = [] # 绝对路径
+    file_abs_list = [] # 绝对路径
     file_list = []  # 相对路径
     for file in os.listdir(path):
-        obs_file_path = os.path.join(path, file)
-        if os.path.isfile(obs_file_path):
-            file_obs_list.append(obs_file_path)
+        abs_file_path = os.path.join(path, file)
+        if os.path.isfile(abs_file_path):
+            file_abs_list.append(abs_file_path)
             file_list.append(file)
-    return file_obs_list, file_list
+    return file_abs_list, file_list
 
 def dir_exist(dir_path):
     """
@@ -74,6 +84,15 @@ def file_exist(file_path):
     else:
         return False
 
+def mkdir_if_not_exist(dir_name):
+    """
+    创建目录
+    Python 3.2+
+    :param dir_name:
+    :return:
+    """
+    os.makedirs(dir_name, exist_ok=True)
+
 def test_current_dir():
     print(os.getcwd()) ##当前目录
     print(os.path.abspath(__file__)) ##当前文件
@@ -84,12 +103,13 @@ if __name__ == "__main__":
     print("__main__")
     print(get_basename('http://flv3.bn.netease.com/videolib3/1707/24/HhsvJ4943/HD/HhsvJ4943-mobile.mp4'))
 
-    dir_obs_list, dir_list = list_dirs('E://workspace/gitlab')
-    print(", ".join(dir_obs_list))
+    dir_abs_list, dir_list = list_dirs('E://workspace/gitlab')
+    print(", ".join(dir_abs_list))
     print(", ".join(dir_list))
 
-    file_obs_list, file_list = list_files('E://workspace/gitlab')
-    print(", ".join(file_obs_list))
+    file_abs_list, file_list = list_files('E://workspace/gitlab')
+    print(", ".join(file_abs_list))
     print(", ".join(file_list))
 
     test_current_dir()
+    mkdir_if_not_exist('E://workspace/tmp/test_python_mkdir')
