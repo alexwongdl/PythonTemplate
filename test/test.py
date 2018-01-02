@@ -145,4 +145,9 @@ if __name__=="__main__":
     a = [[1,2,3],[11,12,13]]
     b = sum(a[0])
     print(b)
+
+    print('---------------test dict---------------------')
+    dict_a = {'a':1, 'b':2, 'c':3}
+    if 'a' in dict_a.keys():
+        print('dict_a[a]:{}'.format(dict_a['a']))
     # load_imgs()

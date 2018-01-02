@@ -47,5 +47,9 @@ if __name__ == "__main__":
     test_except.test()
     test_tqdm.test()
 
-    # if sys.argv[1] == 'mproc':
-    #     main_parallel()
+    # 测试args  method = sys.argv[1].strip()
+    if len(sys.argv) > 1:
+        method = sys.argv[1].strip()
+        if method == 'mproc':
+            # main_parallel()
+            print(method)
