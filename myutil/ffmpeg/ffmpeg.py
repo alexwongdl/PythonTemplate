@@ -5,7 +5,7 @@ Created on 2017-03-21
 @author: timedcy@gmail.com
 """
 
-from ddzj.util import cmd
+import cmdutil
 
 
 def ffmpeg_get_keyframe(infilename, outfilename, timeout=None):

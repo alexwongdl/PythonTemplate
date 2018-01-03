@@ -9,8 +9,8 @@ import collections
 import json
 import subprocess
 
-from ddzj.util import cmd
-from ddzj.util.kv import flatten_dict
+import cmdutil
+from kv import flatten_dict
 
 
 def ffprobe_show(filename):
