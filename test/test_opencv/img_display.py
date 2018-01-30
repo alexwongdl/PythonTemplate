@@ -1,3 +1,8 @@
+"""
+Created by Alex Wang
+On 2018-01-30
+"""
+
 import cv2
 
 def test_imshow():
