@@ -19,6 +19,7 @@ def test_arithmetic_opt():
     google_resize[0:google_logo.shape[0], 0:google_logo.shape[1]] = google_logo
 
     simple_add_img = cv2.addWeighted(dl_img, 0.7, google_resize, 0.5, 0)  # 需要相同的大小
+    cv2.imshow('google_resize', google_resize)
     cv2.imshow('add_weighted', simple_add_img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
