@@ -16,8 +16,8 @@ import urllib.request
 os.environ["CUDA_DEVICE_ORDER"] = "PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
-PATH_TO_CKPT = '/home/recsys/houxiaoxia/wm_pb4/frozen_inference_graph.pb'
-PATH_TO_LABELS = '/home/recsys/houxiaoxia/wm_data/wm_label_map2.pbtxt'
+PATH_TO_CKPT = '/home/recsys/xxx/wm_pb4/frozen_inference_graph.pb'
+PATH_TO_LABELS = '/home/recsys/xxx/wm_data/wm_label_map2.pbtxt'
 NUM_CLASSES = 11
 IMAGE_FOLDER = 'images'
 
@@ -109,7 +109,7 @@ def wm_remove2(img,box_map):#it should be removed
     dst = cv2.inpaint(img,mask,3,cv2.INPAINT_TELEA)    
     return dst,rec
 
-def wm_video(video_path): 
+def wm_video(video_path):
     '''''
     detect watermark in one  of the video frames
     remove watermark from all of frames and save to a new video
