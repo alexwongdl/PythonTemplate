@@ -5,6 +5,8 @@ Created by Alex Wang on 2018-02-03
 import cv2
 import numpy as np
 
+from matplotlib import pyplot as plt
+
 def color_space():
     """
     打印所有可能的颜色空间转换
@@ -115,9 +117,21 @@ def test_edge_detect():
     cv2.destroyAllWindows()
 
 
+def test_histogram():
+    """
+    测试颜色直方图
+    :return:
+    """
+    img = cv2.imread('dl.jpg')
+    colors = ['b','g','r']
+    for i, color in enumerate(colors):
+        plt.plot(cv2.calcHist([img], [i], None, [256], [0, 256]), color)
+    plt.show()
+
 if __name__ == '__main__':
     color_space()
     # image_resize()
     # test_transformation()
     # test_kernel_conv()
-    test_edge_detect()
+    # test_edge_detect()
+    test_histogram()
