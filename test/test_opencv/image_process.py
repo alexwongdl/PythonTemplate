@@ -128,10 +128,51 @@ def test_histogram():
         plt.plot(cv2.calcHist([img], [i], None, [256], [0, 256]), color)
     plt.show()
 
+def hough_line_detect():
+    """
+    hough直线检测
+    :return:
+    """
+    # cv2.HoughLines
+    img = cv2.imread('dl.jpg')
+    img_copy = img.copy()
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    img_canny  = cv2.Canny(img_gray, 50, 150, L2gradient = True)
+    lines = cv2.HoughLines(img_canny, 1, np.pi/180, 200)
+    print(lines[:,0,:])
+
+    for rho, theta in lines[:,0,:]:
+        a = np.cos(theta)
+        b = np.sin(theta)
+        x0 = a * rho
+        y0 = b * rho
+        x1 = int(x0 + 1000 * (-b))
+        y1 = int(y0 + 1000 * a)
+        x2 = int(x0 - 1000 * (-b))
+        y2 = int(y0 - 1000 * a)
+
+        cv2.line(img, (x1, y1), (x2, y2), (0,0,255), 2)
+
+    # cv2.HoughLinesP
+    lines_p = cv2.HoughLinesP(img_canny, 1, np.pi/180, 100, minLineLength=20, maxLineGap=1)
+    for x1, y1, x2, y2 in lines_p[:,0,:]:
+        cv2.line(img_copy, (x1, y1), (x2, y2), (0,0,255), 2)
+
+    cv2.imshow('img_canny', img_canny)
+    cv2.imshow('hough_lines', img)
+    cv2.imshow('hough_lines_p', img_copy)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+
+
 if __name__ == '__main__':
     color_space()
     # image_resize()
     # test_transformation()
     # test_kernel_conv()
     # test_edge_detect()
-    test_histogram()
+    # test_histogram()
+    hough_line_detect()
