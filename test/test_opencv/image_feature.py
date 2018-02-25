@@ -20,5 +20,29 @@ def test_harris():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def test_sift():
+    """
+    SIFT 特征提取
+    :return:
+    """
+    img = cv2.imread('dl.jpg')
+    img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    sift = cv2.xfeatures2d.SIFT_create()
+    kp = sift.detect(img_gray, None)
+    img_kp = img.copy()
+    cv2.drawKeypoints(img, kp, img_kp, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    # 获取SIFT描述子
+    kp, sift_des = sift.compute(img_gray, kp)
+    print(sift_des.shape, sift_des)
+
+    kp_1, sift_des_1 = sift.detectAndCompute(img_gray, None)
+    print(sift_des_1.shape, sift_des_1)
+
+    cv2.imshow('img_kp', img_kp)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 if __name__ == '__main__':
-    test_harris()
+    # test_harris()
+    test_sift()

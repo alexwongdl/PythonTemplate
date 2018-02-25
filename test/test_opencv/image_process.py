@@ -173,6 +173,6 @@ if __name__ == '__main__':
     # image_resize()
     # test_transformation()
     # test_kernel_conv()
-    # test_edge_detect()
+    test_edge_detect()
     # test_histogram()
-    hough_line_detect()
+    # hough_line_detect()
