@@ -69,8 +69,23 @@ def test_surf():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def test_BRIEF():
+    """
+    测试BRIEF特征描述子
+    CenSurE检测关键点位置
+    :return:
+    """
+    img = cv2.imread('dl.jpg')
+
+    star = cv2.xfeatures2d.StarDetector_create() # CenSurE
+    brief = cv2.xfeatures2d.BriefDescriptorExtractor_create() # BRIEF
+    kp = star.detect(img, None)
+    kp, des = brief.compute(img, kp)
+
+    print(des.shape)
 
 if __name__ == '__main__':
     # test_harris()
     # test_sift()
-    test_surf()
+    # test_surf()
+    test_BRIEF()
