@@ -78,14 +78,37 @@ def test_BRIEF():
     img = cv2.imread('dl.jpg')
 
     star = cv2.xfeatures2d.StarDetector_create() # CenSurE
-    brief = cv2.xfeatures2d.BriefDescriptorExtractor_create() # BRIEF
+    brief = cv2.xfeatures2d.BriefDescriptorExtractor_create(bytes = 64, use_orientation = True) # BRIEF
+    print(dir(brief))
     kp = star.detect(img, None)
     kp, des = brief.compute(img, kp)
 
     print(des.shape)
 
+def test_ORB():
+    """
+    测试ORB特征描述子
+    ORB结合了FAST、BRIEF
+    :return:
+    """
+    img = cv2.imread('dl.jpg')
+
+    orb = cv2.ORB_create()
+    kp, des = orb.detectAndCompute(img, None)
+    img_kp = img.copy()
+    cv2.drawKeypoints(img, kp, img_kp, flags=cv2.DRAW_MATCHES_FLAGS_DRAW_RICH_KEYPOINTS)
+
+    print('maxFeatures',orb.getMaxFeatures())
+    print('scoreType', orb.getScoreType())
+    print('WTA_K', orb.getWTA_K())
+    print('des', des.shape)
+    cv2.imshow('img_kp', img_kp)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 if __name__ == '__main__':
     # test_harris()
     # test_sift()
     # test_surf()
-    test_BRIEF()
+    # test_BRIEF()
+    test_ORB()
