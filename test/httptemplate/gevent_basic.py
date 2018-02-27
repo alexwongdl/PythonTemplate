@@ -2,6 +2,7 @@
 Created by Alex Wang
 on 2017-07-30
 非阻塞异步flask服务
+logger：https://stackoverflow.com/questions/26578733/why-is-flask-application-not-creating-any-logs-when-hosted-by-gunicorn
 """
 import os
 from gevent import monkey
