@@ -52,6 +52,7 @@ def test_BFMatcher_ORB():
     :return:
     """
     query_img = cv2.imread('scenery.jpg')
+    # query_img = cv2.imread('scenery_combined.jpg')
     base_img = cv2.imread('scenery_combined.jpg')
     orb = cv2.ORB_create()
 
@@ -88,7 +89,34 @@ def test_BFMatcher_ORB():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def test_BFMatcher_SIFT():
+    """
+    Brute Force Matcher for SIFT
+    :return:
+    """
+    query_img = cv2.imread('scenery.jpg')
+    base_img = cv2.imread('scenery_combined.jpg')
+    query_img_gray = cv2.cvtColor(query_img, cv2.COLOR_BGR2GRAY)
+    base_img_gray = cv2.cvtColor(base_img, cv2.COLOR_BGR2GRAY)
+
+    sift = cv2.xfeatures2d.SIFT_create()
+    query_kp, query_des = sift.detectAndCompute(query_img_gray, None)
+    base_kp, base_des = sift.detectAndCompute(base_img_gray, None)
+
+    bfMatcher = cv2.BFMatcher(cv2.NORM_L2)
+    matches = bfMatcher.knnMatch(query_des, base_des, k=2)
+
+    good_matches = []
+    for m,n in matches: # m:最近的特征，n：第二近的特征
+        if m.distance < 0.75 * n.distance:
+            good_matches.append(m)
+
+    img_matches = cv2.drawMatches(query_img, query_kp, base_img, base_kp, good_matches, None, flags=2)
+    cv2.imshow('img_matches', img_matches)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     # gen_test_image()
-    test_BFMatcher_ORB()
+    # test_BFMatcher_ORB()
+    test_BFMatcher_SIFT()
