@@ -69,6 +69,13 @@ def test_BFMatcher_ORB():
     matches = sorted(matches, key=lambda x: x.distance)
     img_matches = cv2.drawMatches(query_img, kp_query, base_img, kp_base, matches[0:50], None, flags=2)
 
+    # method similar to sift does not work
+    # good_matches =[]
+    # for m,n in matches:
+    #     if m.distance < 0.75 * n.distance:
+    #         good_matches.append(m)
+    # img_matches = cv2.drawMatches(query_img, kp_query, base_img, kp_base, good_matches, None, flags=2)
+
     # method two , support multiple images match
     bfMatcher = cv2.BFMatcher(cv2.NORM_HAMMING)  # crossCheck should be false
     bfMatcher.add([des_base])
@@ -156,6 +163,7 @@ def test_LSH_ORB():
     """
     FLANN_INDEX_LSH = 6
     query_img = cv2.imread('scenery.jpg')
+    # query_img = cv2.imread('scenery_combined.jpg') # good performance
     base_img = cv2.imread('scenery_combined.jpg')
     orb = cv2.ORB_create()
 
@@ -186,10 +194,101 @@ def test_LSH_ORB():
     cv2.destroyAllWindows()
 
     # print(len(matches))
+def test_KDTree_SURF():
+    """
+    FLANN KD树检索SURF特征   m.distance < 0.75 * n.distance
+    :return:
+    """
+    query_img = cv2.imread('scenery.jpg')
+    base_img = cv2.imread('scenery_combined.jpg')
+    query_img_gray = cv2.cvtColor(query_img, cv2.COLOR_BGR2GRAY)
+    base_img_gray = cv2.cvtColor(base_img, cv2.COLOR_BGR2GRAY)
+
+    surf = cv2.xfeatures2d.SURF_create()
+    surf.setHessianThreshold(400)
+    kp_query, des_query = surf.detectAndCompute(query_img_gray, None)
+    kp_base, des_base = surf.detectAndCompute(base_img_gray, None)
+
+    FLANN_INDEX_KDTREE = 1
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=20)  # how many leafs to check in one search
+    kdtree = cv2.FlannBasedMatcher(index_params, search_params)
+    matches = kdtree.knnMatch(des_query, des_base, k=2)
+
+    good_matches = []
+    for m, n in matches:
+        if m.distance < 0.75 * n.distance:
+            good_matches.append(m)
+
+    # homography
+    query_pts = np.float32([kp_query[m.queryIdx].pt for m in good_matches]).reshape(-1,1,2)
+    base_pts = np.float32([kp_base[m.trainIdx].pt for m in good_matches]).reshape(-1,1,2)
+    print('query_pts shape:', query_pts.shape) # (183, 2)
+    M, mask = cv2.findHomography(query_pts, base_pts, cv2.RANSAC, 5.0)
+    mask_list = mask.ravel()
+    filted_matches = []
+    for i in range(len(good_matches)):
+        if mask_list[i] == 1:
+            filted_matches.append(good_matches[i])
+    print('filted_matches number:', len(filted_matches))
+
+    img_matches = cv2.drawMatches(query_img, kp_query, base_img, kp_base, filted_matches, None, flags=2)
+    cv2.imshow('img_matcher', img_matches)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def test_KDTree_SURF_1():
+    """
+    FLANN KD树检索SURF特征   m.distance <= max(3 * min_dist, 0.02):
+    :return:
+    """
+    query_img = cv2.imread('scenery.jpg')
+    base_img = cv2.imread('scenery_combined.jpg')
+    query_img_gray = cv2.cvtColor(query_img, cv2.COLOR_BGR2GRAY)
+    base_img_gray = cv2.cvtColor(base_img, cv2.COLOR_BGR2GRAY)
+
+    surf = cv2.xfeatures2d.SURF_create()
+    surf.setHessianThreshold(400)
+    kp_query, des_query = surf.detectAndCompute(query_img_gray, None)
+    kp_base, des_base = surf.detectAndCompute(base_img_gray, None)
+
+    FLANN_INDEX_KDTREE = 1
+    index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+    search_params = dict(checks=20)  # how many leafs to check in one search
+    kdtree = cv2.FlannBasedMatcher(index_params, search_params)
+    matches = kdtree.match(des_query, des_base)
+
+    good_matches = []
+    min_dist = 100
+    for m in matches:
+        if m.distance < min_dist:
+            min_dist = m.distance
+
+    for m in matches:
+        if m.distance <= max(3 * min_dist, 0.02):
+            good_matches.append(m)
+
+    # homography
+    query_pts = np.float32([kp_query[m.queryIdx].pt for m in good_matches]).reshape(-1,1,2)
+    base_pts = np.float32([kp_base[m.trainIdx].pt for m in good_matches]).reshape(-1,1,2)
+    print('query_pts shape:', query_pts.shape) # (183, 2)
+    M, mask = cv2.findHomography(query_pts, base_pts, cv2.RANSAC, 5.0)
+    mask_list = mask.ravel()
+    filted_matches = []
+    for i in range(len(good_matches)):
+        if mask_list[i] == 1:
+            filted_matches.append(good_matches[i])
+
+    img_matches = cv2.drawMatches(query_img, kp_query, base_img, kp_base, filted_matches, None, flags=2)
+    cv2.imshow('img_matcher', img_matches)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     # gen_test_image()
     # test_BFMatcher_ORB()
     # test_BFMatcher_SIFT()
     # test_KDTree_SIFT()
-    test_LSH_ORB()
+    # test_LSH_ORB()
+    test_KDTree_SURF()
+    # test_KDTree_SURF_1()
