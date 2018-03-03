@@ -6,7 +6,7 @@ import cv2
 
 def test_harris():
     """
-    Harris角点检测
+    Harris角点检测，需要转化成灰度图
     :return:
     """
     img = cv2.imread('dl.jpg')
@@ -24,7 +24,7 @@ def test_harris():
 
 def test_sift():
     """
-    SIFT 特征提取
+    SIFT 特征提取，可以用于灰度图和RGB图
     :return:
     """
     img = cv2.imread('dl.jpg')
@@ -48,7 +48,7 @@ def test_sift():
 
 def test_surf():
     """
-    SURF特征提取
+    SURF特征提取，可以用于灰度图和RGB图
     :return:
     """
     img = cv2.imread('dl.jpg')
@@ -71,7 +71,7 @@ def test_surf():
 
 def test_BRIEF():
     """
-    测试BRIEF特征描述子
+    测试BRIEF特征描述子，不需要转化成灰度图
     CenSurE检测关键点位置
     :return:
     """
@@ -87,7 +87,7 @@ def test_BRIEF():
 
 def test_ORB():
     """
-    测试ORB特征描述子
+    测试ORB特征描述子，不需要转化成灰度图
     ORB结合了FAST、BRIEF
     :return:
     """
