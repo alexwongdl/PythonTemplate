@@ -165,14 +165,27 @@ def hough_line_detect():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def test_non_local_means_denoising():
+    """
+    测试全局去噪方法
+    :return:
+    """
+    img = cv2.imread('./data/NLMD.jpg')
+    print(img.shape)
 
+    img_denosing = cv2.fastNlMeansDenoisingColored (img, None, 10, 10, 7, 21)
 
+    cv2.imshow('img', img)
+    cv2.imshow('img_denosing', img_denosing)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
     color_space()
     # image_resize()
     # test_transformation()
     # test_kernel_conv()
-    test_edge_detect()
+    # test_edge_detect()
     # test_histogram()
     # hough_line_detect()
+    test_non_local_means_denoising()
