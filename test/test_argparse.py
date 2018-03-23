@@ -4,7 +4,7 @@ On 2017-10-15
 """
 import argparse
 
-from myutil.myprint import *
+from alexutil.myprint import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

@@ -4,12 +4,15 @@ Created by Alex Wang on 20170704
 """
 from collections import Counter
 from collections import OrderedDict
-
+from collections import namedtuple
 
 ##TODO：测试collections内各个数据结构的特性
 def test_namedtuple():
     print("test namedtuple...")
-
+    Person = namedtuple(typename='person', field_names=['name', 'age'])
+    alex = Person(name = 'Alex Wang', age = '18')
+    alex = alex._replace(age = '20')
+    print(alex)
 
 def test_deque():
     print("test deque...")
@@ -32,6 +35,18 @@ def test_counter():
     print(word_to_id)
     print(id_to_word)
 
+    print('test counter for word count...')
+    word_counter = Counter()
+    for line in open('dict_list_tuple_set.py', 'r', encoding='utf-8'):
+        elems = line.split(' ')
+        for elem in elems:
+            word_counter.update({elem.strip(), 1})
+    print('size of word_counter:', len(word_counter.keys()))
+    del word_counter['1']
+    del word_counter['=']
+    most_common_words = word_counter.most_common(3)
+    for key, cnt in most_common_words:
+        print(key, cnt)
 
 def test_ordereddict():
     """
@@ -60,17 +75,20 @@ def test_userlist():
 def test_userstring():
     print("test userstring...")
 
+
 def test_dict_sort():
     """
     字典按照value值排序
     :return:
     """
-    dict_one = {'a':5,'b':10, 'c':3, 'd':6, 'e':6}
+    dict_one = {'a': 5, 'b': 10, 'c': 3, 'd': 6, 'e': 6}
     print(dict_one.items())
     sorted_one = sorted(dict_one.items(), key=lambda x: x[1], reverse=True)
     print([x[0] for x in sorted_one])
+
 
 if __name__ == "__main__":
     test_counter()
     test_ordereddict()
     test_dict_sort()
+    test_namedtuple()

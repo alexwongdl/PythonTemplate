@@ -2,14 +2,14 @@ import os
 
 import sys
 
-from myutil import stringutil
+from alexutil import stringutil
 from test import elegant_code_style
 from test.tts import test_gtts
-from myutil import configutil
-from myutil.logutil import LogUtil
+from alexutil import configutil
+from alexutil.logutil import LogUtil
 from test import test_except
 from test import test_tqdm
-from myutil import dateutil
+from alexutil import dateutil
 
 # 获取当前路径并添加到系统path
 # cwd = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))

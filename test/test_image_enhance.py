@@ -3,8 +3,8 @@ Created by Alex Wang
 On 2017-10-30
 """
 
-from myutil import cmdutil
-from myutil import pathutil
+from alexutil import cmdutil
+from alexutil import pathutil
 
 if __name__ == '__main__':
     dir = '/data/hzwangjian1/image_enhance/heibian_keyframe'

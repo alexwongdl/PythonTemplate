@@ -10,10 +10,10 @@ import traceback
 import pymysql
 
 from ddzj.util import db
-from myutil import configutil
-from myutil import dateutil
-from myutil import dbutil
-from myutil import logutil
+from alexutil import configutil
+from alexutil import dateutil
+from alexutil import dbutil
+from alexutil import logutil
 
 config_path = os.path.join(os.getcwd(), "config")
 log_path = os.path.join(os.getcwd(), "info.log")

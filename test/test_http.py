@@ -2,8 +2,8 @@
 Created by Alex Wang on 2017-11-14
 """
 import json
-from myutil import httputil
-from myutil import stringutil
+from alexutil import httputil
+from alexutil import stringutil
 
 def test_video_quality(video_url='http://kkkkkkk.mp4'):
     """

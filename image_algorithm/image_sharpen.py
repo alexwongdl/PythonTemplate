@@ -8,7 +8,7 @@ import os
 import numpy as np
 import cv2
 
-from myutil import pathutil
+from alexutil import pathutil
 
 def image_sharpening(img_org):
     kernel = np.array([[0,-1,0], [-1,5,-1], [0,-1,0]])

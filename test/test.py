@@ -92,7 +92,7 @@ def test_png():
     print(im.shape)
     print(im[50][:][:])
 
-from myutil import httputil
+from alexutil import httputil
 import os
 def load_imgs():
     output_dir = "E://temp/deblur/imags_dir"
