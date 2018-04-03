@@ -1,2 +1,20 @@
 [2018-02-27 17:49:18,247](INFO)alexwang : test logging fileConfig
 2018-02-27 17:50:27,107 test_logger.py[line:13] INFO test logging fileConfig
+''2018-04-03 14:12:03' INFO     alexwang        test logging fileConfig'
+'2018-04-03 14:12:39' INFO     alexwang        test logging fileConfig
+[2018-04-03 14:19:20] INFO alexwang test logging fileConfig
+[[2018-04-03 14:20:25]][test_logger.py][line:13][INFO] test logging fileConfig
+[2018-04-03 14:20:53][test_logger.py][line:13][INFO] test logging fileConfig
+[2018-04-03 14:21:25][test_logger.py][line:13][INFO][alexwang] test logging fileConfig
+[2018-04-03 14:22:32][alexwang][test_logger.py - line:13][INFO] test logging fileConfig
+[2018-04-03 14:24:24][alexwang]test_logger.py[line:13][INFO] test logging fileConfig
+[2018-04-03 14:24:44][alexwang]test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:25:29][alexwang]-5s test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:25:49][alexwang] test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:26:00][alexwang] test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:26:10][alexwang] test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:26:27][alexwang    ] test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:26:40][alexwang] test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:28:31] test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:28:59] test_logger.py[line:13]INFO: test logging fileConfig
+[2018-04-03 14:28:59] test_logger.py[line:14]ERROR: an error log
