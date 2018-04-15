@@ -20,3 +20,11 @@ name="Alex Wang"
 echo "length of name:" ${#name}     # 字符串长度
 echo "part of name:" ${name:0:5}    # 截取子串
 
+
+echo "------------------数组---------------------"
+arr=("Alex" 00 "Wang")              # 数组元素之间用空格分隔
+echo ${arr[1]}
+arr[1]=90
+echo ${arr[*]}                      # 读取数组的所有元素 *或者@
+echo length of arr: ${#arr[*]}
+
