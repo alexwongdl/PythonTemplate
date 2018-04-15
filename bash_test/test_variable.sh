@@ -26,5 +26,11 @@ arr=("Alex" 00 "Wang")              # 数组元素之间用空格分隔
 echo ${arr[1]}
 arr[1]=90
 echo ${arr[*]}                      # 读取数组的所有元素 *或者@
-echo length of arr: ${#arr[*]}
+echo length of arr: ${#arr[*]}      # 获取数组长度
+
+for item in ${arr[*]}               # 遍历数组
+do
+    echo item: ${item}
+done
+
 
