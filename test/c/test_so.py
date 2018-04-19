@@ -9,6 +9,8 @@ def call_so():
     """
     test so file calling
     :return:
+    https://www.cnblogs.com/fariver/p/6573112.html
+    http://www.cnblogs.com/fariver/p/6560885.html
     """
     so = ctypes.CDLL('./sum.so')
 
