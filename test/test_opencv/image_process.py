@@ -125,7 +125,7 @@ def test_histogram():
     img = cv2.imread('dl.jpg')
     colors = ['b','g','r']
     for i, color in enumerate(colors):
-        plt.plot(cv2.calcHist([img], [i], None, [256], [0, 255]), color)
+        plt.plot(cv2.calcHist([img], [i], None, [256], [0, 256]), color)
     plt.show()
 
 def hough_line_detect():
