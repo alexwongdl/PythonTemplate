@@ -5,6 +5,7 @@ on 2017-08-03
 import os
 import hashlib
 import sys
+import shutil
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def test_basename():
@@ -48,15 +49,16 @@ def test_file_exist():
 def test_delete():
     """
     os.rmdir：删除空目录，目录不为空时抛出异常
+    shutil.rmtree: 删除目录, 目录不为空时迭代删除子目录和子文件
     os.remove：删除文件，如果是一个目录，抛出异常
     :return:
     """
     dir_path = 'E://temp/videoquality/test'
     os.rmdir(dir_path)
+    shutil.rmtree(dir_path)
 
     file_path = 'E://temp/videoquality/test.txt'
     os.remove(file_path)
-
 
 def current_dir():
     print(os.getcwd()) ##当前目录
