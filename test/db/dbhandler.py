@@ -4,9 +4,9 @@ On 2017-08-09
 """
 
 import pymysql
-from myutil import configutil
-from myutil import dbutil
-from myutil import dateutil
+from alexutil import configutil
+from alexutil import dbutil
+from alexutil import dateutil
 import traceback
 
 conf_path = 'E://workspace/dbconf'

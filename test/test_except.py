@@ -1,7 +1,7 @@
 """
 Created by Alex Wang on 20170620
 """
-from myutil.logutil import LogUtil
+from alexutil.logutil import LogUtil
 import traceback
 
 logger = LogUtil()

@@ -7,7 +7,7 @@ from PIL import Image
 import tensorflow as tf
 import scipy.misc as sim
 
-from myutil import pathutil
+from alexutil import pathutil
 
 def jpg2png_one(input_path, output_path):
     img = sim.imread(input_path)

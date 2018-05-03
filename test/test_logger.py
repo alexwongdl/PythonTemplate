@@ -11,6 +11,7 @@ logger = logging.getLogger('alexwang')
 
 def test_logging_conf():
     logger.info('test logging fileConfig')
+    logger.error('an error log')
 
 if __name__ == '__main__':
     test_logging_conf()
