@@ -50,10 +50,11 @@ def test_hog_face_detector():
     """
     img_path = 'data/running_man.jpg'
     img = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     hog_face_detector = dlib.get_frontal_face_detector()
     # 第二个参数--upsample, 第三个参数--threshold,超过threshold的结果会被输出
     # returns:rects--检测框位置,scores--得分,idx--检测器编号(正脸/侧脸等)
-    rects, scores, idx = hog_face_detector.run(img, 2, 0)
+    rects, scores, idx = hog_face_detector.run(img_rgb, 2, 0)
 
     for i, rect in enumerate(rects):
         x1 = rect.left()
@@ -68,6 +69,43 @@ def test_hog_face_detector():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def test_face_alignment():
+    """
+    input: image including faces
+    output:aligned faces
+
+    You can get the shape_predictor_5_face_landmarks.dat from:
+    http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2
+    :return:
+    """
+    img_path = 'data/running_man.jpg'
+    img = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    hog_face_detector = dlib.get_frontal_face_detector()
+    shape_predictor = dlib.shape_predictor('shape_predictor_5_face_landmarks.dat')
+
+    rects, scores, idx = hog_face_detector.run(img_rgb, 2, 0)
+    faces = dlib.full_object_detections()
+    for rect in rects:
+        faces.append(shape_predictor(img_rgb, rect))
+
+    # get the aligned face images
+    images = dlib.get_face_chips(img, faces, size=320)
+    for ind, image in enumerate(images):
+        print(ind)
+        # image_patch = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        cv2.imshow('patch{}'.format(ind), image)
+
+    # get a single chip
+    print('faces[0]', faces[0])
+    image = dlib.get_face_chip(img, faces[0], size=320)
+    cv2.imshow('single chip', image)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
 if __name__ == '__main__':
     # test_cnn_face_detector()
-    test_hog_face_detector()
+    # test_hog_face_detector()
+    test_face_alignment()
