@@ -19,7 +19,7 @@ def image_download(url, save_path):
     :return:
     """
     with open(save_path, 'wb') as handle:
-        response = requests.get(url, stream=True)
+        response = requests.get(url, timeout=60, stream=True)
         if not response.ok:
             return False
 
