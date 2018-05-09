@@ -91,7 +91,7 @@ def test_face_alignment():
         faces.append(shape_predictor(img_rgb, rect))
 
     # get the aligned face images
-    images = dlib.get_face_chips(img, faces, size=320)
+    images = dlib.get_face_chips(img, faces, size=80)
     for ind, image in enumerate(images):
         print(ind)
         # image_patch = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
@@ -99,13 +99,121 @@ def test_face_alignment():
 
     # get a single chip
     print('faces[0]', faces[0])
-    image = dlib.get_face_chip(img, faces[0], size=320)
+    image = dlib.get_face_chip(img, faces[0], size=80)
     cv2.imshow('single chip', image)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def test_face_jitter():
+    """
+    This example shows how faces were jittered and augmented to create training
+    data for dlib's face recognition model.  It takes an input image and
+    disturbs the colors as well as applies random translations, rotations, and
+    scaling.
+    :return:
+    """
+    img_path = 'data/running_man.jpg'
+    img = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # get face
+    hog_face_detector = dlib.get_frontal_face_detector()
+    shape_predictor = dlib.shape_predictor('shape_predictor_5_face_landmarks.dat')
+
+    rects, scores, idx = hog_face_detector.run(img_rgb, 2, 0)
+    faces = dlib.full_object_detections()
+    for rect in rects:
+        faces.append(shape_predictor(img_rgb, rect))
+
+    face_image = dlib.get_face_chip(img_rgb, faces[0], size=80)
+
+    # jitter face
+    jittered_images = dlib.jitter_image(face_image, num_jitters=4, disturb_colors=True)
+    for idx, image in enumerate(jittered_images):
+        image_brg = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        cv2.imshow('jittered_image_{}'.format(idx), image_brg)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def test_face_landmarks():
+    """
+    Estimate the pose with 68 landmarks.The pose estimator was created by
+    using dlib's implementation of the paper:
+        One Millisecond Face Alignment with an Ensemble of Regression Trees by
+        Vahid Kazemi and Josephine Sullivan, CVPR 2014
+    and was trained on the iBUG 300-W face landmark dataset (see
+        https://ibug.doc.ic.ac.uk/resources/facial-point-annotations/):
+        C. Sagonas, E. Antonakos, G, Tzimiropoulos, S. Zafeiriou, M. Pantic.
+        300 faces In-the-wild challenge: Database and results.
+        Image and Vision Computing (IMAVIS), Special Issue on Facial Landmark Localisation "In-The-Wild". 2016
+    You can download a trained facial shape predictor from :
+    http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2
+    :return:
+    """
+    img_path = 'data/running_man.jpg'
+    img = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # get face
+    hog_face_detector = dlib.get_frontal_face_detector()
+    shape_predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+
+
+    rects, scores, idx = hog_face_detector.run(img_rgb, 2, 0)
+    faces = dlib.full_object_detections()
+    for rect in rects:
+        faces.append(shape_predictor(img_rgb, rect))
+
+    for landmark in faces:
+        for point in landmark.parts():
+            cv2.putText(img, '*', (point.x, point.y), cv2.FONT_HERSHEY_DUPLEX,
+                        0.1, (0, 0, 255), 1, cv2.LINE_AA)
+
+    cv2.imshow('face_img', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+def test_face_recognition():
+    """
+    Map an image of a human face to a 128d vector space.
+    You can perform face recognition by checking if their Euclidean distance is small enough.
+
+    When using a distance threshold of 0.6, the dlib model obtains an accuracy
+    of 99.38% on the standard LFW face recognition benchmark
+
+    You can download a trained facial shape predictor and recognition model from:
+        http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2
+        http://dlib.net/files/dlib_face_recognition_resnet_model_v1.dat.bz2
+
+    algorithm:
+        http://blog.dlib.net/2017/02/high-quality-face-recognition-with-deep.html
+        [1] O. M. Parkhi, A. Vedaldi, A. Zisserman Deep Face Recognition British Machine Vision Conference, 2015.
+        [2] H.-W. Ng, S. Winkler. A data-driven approach to cleaning large face datasets. Proc. IEEE International Conference on Image Processing (ICIP), Paris, France, Oct. 27-30, 2014
+    :return:
+    """
+    img_path = 'data/running_man.jpg'
+    img = cv2.imread(img_path)
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    # get face
+    hog_face_detector = dlib.get_frontal_face_detector()
+    shape_predictor = dlib.shape_predictor('shape_predictor_5_face_landmarks.dat')
+    face_feature_extractor = dlib.face_recognition_model_v1('dlib_face_recognition_resnet_model_v1.dat')
+
+    rects, scores, idx = hog_face_detector.run(img_rgb, 2, 0)
+    for rect in rects:
+        shape = shape_predictor(img_rgb, rect)
+        # dlib.vector
+        face_descriptor = face_feature_extractor.compute_face_descriptor(img, shape)
+        print('face_descriptor', list(face_descriptor))
+
+
 if __name__ == '__main__':
     # test_cnn_face_detector()
     # test_hog_face_detector()
-    test_face_alignment()
+    # test_face_alignment()
+    # test_face_jitter()
+    # test_face_landmarks()
+    test_face_recognition()
