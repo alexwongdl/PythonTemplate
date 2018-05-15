@@ -13,10 +13,13 @@ import tensorflow as tf
 import tensorflow.contrib.slim as slim
 from tensorflow.python.tools.inspect_checkpoint import print_tensors_in_checkpoint_file
 import cv2
+import imagenet
 
 import mobilenet_v1
 
 print(tf.__version__)
+label_names = imagenet.create_readable_names_for_imagenet_labels()
+print(label_names)
 
 
 def load_mobilenet_meta():
@@ -59,8 +62,10 @@ def test_mobilenet_v1():
     img_rgb = cv2.cvtColor(img_resize, cv2.COLOR_BGR2RGB).astype(np.float32)
     # input_mat = np.random.rand(batch_size, height, width, 3).astype(np.float32)
     input_mat = np.zeros(shape=(batch_size, height, width, 3), dtype=np.float32)
-    input_mat[0, :, :, :] = (img_rgb - 127) / 127.0
-    print(input_mat[0, :, :, :])
+    # input_mat[0, :, :, :] = (img_rgb - 127) / 127.0
+    input_mat[0, :, :, :] = img_rgb / 255.0
+    print('input_mat[0]:', input_mat[0, :, :, :])
+    print('input_mat[1]:', input_mat[1, :, :, :])
 
     # inputs = tf.random_uniform((batch_size, height, width, 3), name='input')
     inputs = tf.convert_to_tensor(input_mat, name='input', dtype=tf.float32)
@@ -68,7 +73,7 @@ def test_mobilenet_v1():
     arg_scope = mobilenet_v1.mobilenet_v1_arg_scope(is_training=False, weight_decay=0.0)
     with slim.arg_scope(arg_scope):
         logits, end_points = mobilenet_v1.mobilenet_v1(inputs, num_classes,
-                                                   is_training=False)
+                                                       is_training=False)
 
     model_dir = '/Users/alexwang/data/mobilenet_v1_1.0_160'
     checkpoint_path = os.path.join(model_dir, 'mobilenet_v1_1.0_160.ckpt')
@@ -90,11 +95,13 @@ def test_mobilenet_v1():
         print(classes)
 
         saver.restore(sess, checkpoint_path)
-        predict = sess.run([end_points['Predictions']])
-        print(predict)
-        classes = np.argsort(predict[0], axis=1)
+        predict = sess.run([end_points['Predictions']])[0]
+        print('predict:', predict)
+        classes = np.argsort(predict, axis=1)
         for predict_result in classes:
-            print(predict_result[::-1][0:5])
+            # print(predict_result[::-1][0:5])
+            class_names = [(label_names[i], predict[0][i]) for i in predict_result[::-1][0:5]]
+            print(class_names)
 
 
 if __name__ == '__main__':
