@@ -1,7 +1,15 @@
 .idea
+.cache
+.pytest_cache/
 /test/__pycache__
 __pycache__
-/*.log
-/*.iml
+build/
+develop-eggs/
+MANIFEST
+*.manifest
+.cache
+*.log
+*.iml
+*.pyc
 shape_predictor_68_face_landmarks.dat
 dlib_face_recognition_resnet_model_v1.dat
