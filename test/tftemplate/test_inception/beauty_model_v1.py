@@ -126,6 +126,7 @@ def train_model(FLAGS):
                                            is_training=False, dropout=FLAGS.dropout)
 
     ## TODO: should defined before train_op
+    # https://github.com/tensorflow/tensorflow/issues/7244
     variables = slim.get_variables_to_restore()
     variables_to_restore = [v for v in variables if v.name.split('/')[0] == 'InceptionV4']
 
@@ -222,9 +223,9 @@ def train_model(FLAGS):
                         })
                     summary_writer.add_summary(summary_str, global_step_val + i_valid)
 
-                    print('valid accuracy:{:.4f}'.format(accuracy))
+                    print('valid rmse:{:.4f}'.format(accuracy))
                     accuracy_average += accuracy
                 accuracy_average /= batch_num
-                print('valid average accuracy:{:.4f}'.format(accuracy_average))
+                print('valid average rmse:{:.4f}'.format(accuracy_average))
 
         summary_writer.close()
