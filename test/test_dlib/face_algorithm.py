@@ -69,6 +69,7 @@ def test_hog_face_detector():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 def test_face_alignment():
     """
     input: image including faces
@@ -105,6 +106,7 @@ def test_face_alignment():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 def test_face_jitter():
     """
     This example shows how faces were jittered and augmented to create training
@@ -137,6 +139,7 @@ def test_face_jitter():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 def test_face_landmarks():
     """
     Estimate the pose with 68 landmarks.The pose estimator was created by
@@ -153,13 +156,15 @@ def test_face_landmarks():
     :return:
     """
     img_path = 'data/running_man.jpg'
+    img_path = 'data/face_one.png'
+    # img_path = 'data/face_two.jpg'
     img = cv2.imread(img_path)
+    print('img_shape:', img.shape)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
     # get face
     hog_face_detector = dlib.get_frontal_face_detector()
     shape_predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
-
 
     rects, scores, idx = hog_face_detector.run(img_rgb, 2, 0)
     faces = dlib.full_object_detections()
@@ -167,13 +172,14 @@ def test_face_landmarks():
         faces.append(shape_predictor(img_rgb, rect))
 
     for landmark in faces:
-        for point in landmark.parts():
-            cv2.putText(img, '*', (point.x, point.y), cv2.FONT_HERSHEY_DUPLEX,
-                        0.1, (0, 0, 255), 1, cv2.LINE_AA)
+        for idx, point in enumerate(landmark.parts()):
+            # cv2.putText(img, '*', (point.x, point.y), cv2.FONT_HERSHEY_DUPLEX, 0.1, (0, 0, 255), 1, cv2.LINE_AA)
+            cv2.putText(img, str(idx), (point.x, point.y), cv2.FONT_HERSHEY_DUPLEX, 0.3, (0, 0, 255), 1, cv2.LINE_AA)
 
     cv2.imshow('face_img', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
 
 def test_face_recognition():
     """
@@ -215,5 +221,5 @@ if __name__ == '__main__':
     # test_hog_face_detector()
     # test_face_alignment()
     # test_face_jitter()
-    # test_face_landmarks()
-    test_face_recognition()
+    test_face_landmarks()
+    # test_face_recognition()
