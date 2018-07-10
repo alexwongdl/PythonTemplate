@@ -92,6 +92,57 @@ def test_face_alignment():
         faces.append(shape_predictor(img_rgb, rect))
 
     # get the aligned face images
+    images = dlib.get_face_chips(img, faces, size=320)
+    for ind, image in enumerate(images):
+        print(ind)
+        # image_patch = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        cv2.imshow('patch{}'.format(ind), image)
+
+    # get a single chip
+    print('faces[0]', faces[0])
+    image = dlib.get_face_chip(img, faces[0], size=80)
+    cv2.imshow('single chip', image)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
+def test_face_alignment_cnn():
+    """
+    input: image including faces
+    output:aligned faces
+
+    You can get the shape_predictor_5_face_landmarks.dat from:
+    http://dlib.net/files/shape_predictor_5_face_landmarks.dat.bz2
+    :return:
+    """
+    img_path = 'data/running_man.jpg'
+    img = cv2.imread(img_path)
+    height, width = img.shape[0:2]
+    img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+
+    cnn_face_detector = dlib.cnn_face_detection_model_v1('mmod_human_face_detector.dat')
+    shape_predictor = dlib.shape_predictor('shape_predictor_5_face_landmarks.dat')
+
+    dets = cnn_face_detector(img, 2)
+    faces = dlib.full_object_detections()
+    print(help(faces))
+    print(dir(faces))
+    for i, d in enumerate(dets):
+        # rect = d.rect
+        # x, y = rect.left(), rect.top()
+        # w = rect.right() - x
+        # h = rect.bottom() - y
+        # up_margin = w / 4
+        # margin = w / 5
+        # y_min = int(max(0, y - up_margin))
+        # y_max = int(min(height, y + h + margin))
+        # x_min = int(max(0, x - margin))
+        # x_max = int(min(width, x + w + margin))
+        # rect_new = dlib.rectangle(left=x_min, top=y_min, right=x_max, bottom=y_max)
+        faces.append(shape_predictor(img_rgb, d.rect))
+
+    # get the aligned face images
     images = dlib.get_face_chips(img, faces, size=80)
     for ind, image in enumerate(images):
         print(ind)
@@ -220,6 +271,7 @@ if __name__ == '__main__':
     # test_cnn_face_detector()
     # test_hog_face_detector()
     # test_face_alignment()
+    test_face_alignment_cnn()
     # test_face_jitter()
-    test_face_landmarks()
+    # test_face_landmarks()
     # test_face_recognition()

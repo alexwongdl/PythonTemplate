@@ -1,6 +1,36 @@
 """
 Created by Alex Wang
 convert 0~5 value to 0~100 score , use classification model
+dataset;SCUT-FBP5500 https://github.com/HCIILAB/SCUT-FBP5500-Database-Release
+data prepare: data balance
+
+72 iter7199, valid av_acc:0.0000, av_rmse:31.0814, av_peason:0.9151
+ 73 iter7299, valid av_acc:0.0000, av_rmse:32.1715, av_peason:0.9173
+ 74 iter7399, valid av_acc:0.0009, av_rmse:30.6203, av_peason:0.9209
+ 75 iter7499, valid av_acc:0.0009, av_rmse:32.8804, av_peason:0.9104
+ 76 iter7599, valid av_acc:0.0009, av_rmse:32.9209, av_peason:0.9104
+ 77 iter7699, valid av_acc:0.0009, av_rmse:30.3929, av_peason:0.9229
+ 78 iter7799, valid av_acc:0.0000, av_rmse:32.6201, av_peason:0.9157
+ 79 iter7899, valid av_acc:0.0000, av_rmse:32.0940, av_peason:0.9219
+ 80 iter7999, valid av_acc:0.0000, av_rmse:32.9965, av_peason:0.9115
+ 81 iter8099, valid av_acc:0.0009, av_rmse:32.1103, av_peason:0.9168
+ 82 iter8199, valid av_acc:0.0000, av_rmse:34.9188, av_peason:0.9174
+ 83 iter8299, valid av_acc:0.0000, av_rmse:31.8259, av_peason:0.9149
+ 84 iter8399, valid av_acc:0.0000, av_rmse:31.8094, av_peason:0.9197
+ 85 iter8499, valid av_acc:0.0000, av_rmse:31.4296, av_peason:0.9181
+ 86 iter8599, valid av_acc:0.0009, av_rmse:31.2686, av_peason:0.9181
+ 87 iter8699, valid av_acc:0.0018, av_rmse:32.3712, av_peason:0.9181
+ 88 iter8799, valid av_acc:0.0000, av_rmse:34.3213, av_peason:0.9153
+ 89 iter8899, valid av_acc:0.0000, av_rmse:32.2942, av_peason:0.9156
+ 90 iter8999, valid av_acc:0.0000, av_rmse:32.5161, av_peason:0.9170
+ 91 iter9099, valid av_acc:0.0000, av_rmse:33.5198, av_peason:0.9178
+ 92 iter9199, valid av_acc:0.0000, av_rmse:30.0069, av_peason:0.9200
+ 93 iter9299, valid av_acc:0.0000, av_rmse:33.7664, av_peason:0.9126
+ 94 iter9399, valid av_acc:0.0000, av_rmse:35.0704, av_peason:0.9058
+ 95 iter9499, valid av_acc:0.0000, av_rmse:31.3888, av_peason:0.9144
+ 96 iter9599, valid av_acc:0.0000, av_rmse:30.9521, av_peason:0.9202
+ 97 iter9699, valid av_acc:0.0000, av_rmse:33.2825, av_peason:0.9122
+ 98 iter9799, valid av_acc:0.0000, av_rmse:30.9457, av_peason:0.9188
 """
 
 import os
@@ -247,6 +277,7 @@ def train_model(FLAGS):
                                    y_input_summary, regress_label_summary])
 
     saver = tf.train.Saver(variables_to_restore)
+    # saver_all = tf.train.Saver(max_to_keep=None) # save all models
     saver_all = tf.train.Saver()
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
@@ -389,7 +420,7 @@ def train_model(FLAGS):
                              format(step, accuracy_average, rmse_average, pearson_average))
                 writer.flush()
 
-                if pearson_average >= 0.89:
+                if pearson_average >= 0.92:
                     shutil.copytree(FLAGS.save_model_dir,
-                                    "{}_{:.5f}_{}".format(FLAGS.save_model_dir, pearson_average, global_step_val))
+                                    "{}_{:.5f}_{}".format(FLAGS.save_model_dir, pearson_average, step))
         summary_writer.close()
