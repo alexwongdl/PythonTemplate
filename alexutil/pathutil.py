@@ -93,6 +93,18 @@ def mkdir_if_not_exist(dir_name):
     """
     os.makedirs(dir_name, exist_ok=True)
 
+def recreate_dir(dir_name):
+    """
+    重新创建目录
+    如果目录存在, 清空目录后创建新目录
+    如果目录不存在, 创建新目录
+    :param dir_name:
+    :return:
+    """
+    if dir_exist(dir_name):
+        dir_clear(dir_name)
+    mkdir_if_not_exist(dir_name)
+
 def test_current_dir():
     print(os.getcwd()) ##当前目录
     print(os.path.abspath(__file__)) ##当前文件
