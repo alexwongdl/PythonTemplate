@@ -32,6 +32,16 @@ def image_resize():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def apply_transform(point, M):
+    """
+    计算放射变换后的结果
+    :param point:(x,y) point
+    :param M: 放射变换矩阵,例如rotate_mat = cv2.getRotationMatrix2D((cols / 2, rows / 2), 10, 1)
+    :return:
+    """
+    rotated_point = M.dot(np.array(point + (1,))).astype(np.int32)
+    return rotated_point
+
 def test_transformation():
     """
     图像平移、旋转、仿射变换
