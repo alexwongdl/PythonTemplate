@@ -1,8 +1,7 @@
-#!/usr/bin/python
-# -*- coding:utf8 -*-
 """
 Created by Alex Wang
 On 2018-07-25
+
 threshold:0.98 
 """
 import traceback
