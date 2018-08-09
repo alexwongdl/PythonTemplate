@@ -2,6 +2,8 @@
 Created by Alex Wang
 On 2018-07-30
 
+Model: https://github.com/yule-li/CosFace
+
 [Configurations]:
 	lfw_pairs: data/pairs.txt
 	embedding_size: 1024
