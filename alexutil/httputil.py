@@ -7,9 +7,11 @@ import requests
 import json
 
 import logging
+import urllib.request
 
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
+
 
 def image_download(url, save_path):
     """
@@ -59,6 +61,7 @@ def send_post(url, params=None):
     """
     return requests.post(url, params)
 
+
 def send_post_content(url, params=None):
     """
     发送post请求，params是dict格式
@@ -68,6 +71,22 @@ def send_post_content(url, params=None):
     """
     return requests.post(url, params).content.decode('UTF-8')
 
+
+def download_video(video_url, save_path):
+    """
+    下载视频
+    python2:
+        def download_video(video_url, save_path):
+        rsp = urllib2.urlopen(video_url)
+        with open(save_path, 'wb') as f:
+            f.write(rsp.read())
+    :param video_url:
+    :param save_path: xxx.mp4
+    :return:
+    """
+    urllib.request.urlretrieve(video_url, save_path)
+
+
 if __name__ == "__main__":
     # image_download('http://dmr.nosdn.127.net/v-20170826-6b05cdaa733282703f729b5afcc65759.jpg','E://temp/docduplicate/image/v-20170826-6b05cdaa733282703f729b5afcc65759.jpg')
 
@@ -76,14 +95,15 @@ if __name__ == "__main__":
     # print(response)
 
     title_cheat_url = 'http://nlp.service.163.org/dl-nlp-news/titlecheat_detect_article'
-    params = {"title":"孙悟空被压五指山，菩提法师为啥不救他？背后原因吓人", "category":"人文"}
+    params = {"title": "孙悟空被压五指山，菩提法师为啥不救他？背后原因吓人", "category": "人文"}
     response = send_post_content(title_cheat_url, params)
     print(response)
     response_json = json.loads(response)
     print(response_json['body']['finalMark'])
 
     sansu_url = 'http://nlp.service.163.org/news-api/vulgarity_quant_article'
-    params = {"title":"美国怪兽车大赛 一名车手的表演燃爆全场", "category":"搞笑", 'docid':'VCSAT9DI8', 'content': '','source':'总有刁民想害朕'}
+    params = {"title": "美国怪兽车大赛 一名车手的表演燃爆全场", "category": "搞笑", 'docid': 'VCSAT9DI8', 'content': '',
+              'source': '总有刁民想害朕'}
     response = send_post_content(sansu_url, params)
     print(response)
     response_json = json.loads(response)
