@@ -6,7 +6,7 @@ Created by Alex Wang on 2018-2-27
 import logging
 import logging.config
 
-logging.config.fileConfig('../resource/logger_config')
+logging.config.fileConfig('../resource/logger_config.ini')
 logger = logging.getLogger('alexwang')
 
 def test_logging_conf():
