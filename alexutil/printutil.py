@@ -4,7 +4,7 @@ Created by Alex Wang
 On 2017-09-21
 控制台输出带颜色的文字方法
 
-格式：\033[显示方式;前景色;背景色m   分号分隔
+格式：\033[显示方式;前景色;背景色m要打印的字符串\033[0m 分号分隔
 
 说明：
 前景色            背景色           颜色
@@ -101,6 +101,9 @@ def arg_parse_print(FLAGS):
     print('[End of configuration]')
 
 if __name__ == "__main__":
-    print("__main__")
+    # print("__main__")
     # test()
-    mod_print("test_print", ANSI_GREEN, ANSI_BLACK_BACKGROUND, MOD_UNDERLINE)
+    mod_print("python colorful print", ANSI_GREEN, ANSI_BLACK_BACKGROUND, MOD_UNDERLINE)
+    mod_print("python colorful print", ANSI_RED, ANSI_WHITE_BACKGROUND, MOD_UNDERLINE)
+    mod_print("python colorful print", ANSI_YELLOW, ANSI_BLACK_BACKGROUND, MOD_HIGHLIGHT)
+    mod_print("python colorful print", ANSI_YELLOW, ANSI_BLACK_BACKGROUND, MOD_UNDERLINE)
