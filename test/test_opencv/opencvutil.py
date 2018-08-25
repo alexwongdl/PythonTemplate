@@ -1,6 +1,11 @@
 """
 Created by Alex Wang
 On 2018-07-18
+
+colours = np.random.rand(32,3) * 256 #used only for display
+rectangle(image_org, d[0], d[1], d[2]- d[0],
+                                  d[3] - d[1], colours[d[4]%32,:],
+                                  thickness=2, label=str(d[4]))
 """
 
 def rectangle(image, x, y, w, h, color, thickness=2, label=None):
