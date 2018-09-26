@@ -2,6 +2,7 @@
 Created by Alex Wang on 2018-09-26
 training deep learning model with synchronous distributed mode
 
+https://github.com/uzh-rpg/netvlad_tf_open/blob/master/python/netvlad_tf/layers.py
 """
 import os
 
@@ -10,96 +11,34 @@ import tensorflow as tf
 import tensorlayer as tl
 import tensorflow.contrib.slim as slim
 
-import eval_util
-import data_process
-import fangkong_cate_map
+def netVLAD(inputs, num_clusters, assign_weight_initializer=None,
+            cluster_initializer=None, skip_postnorm=False):
+    ''' skip_postnorm: Only there for compatibility with mat files. '''
+    # https://github.com/uzh-rpg/netvlad_tf_open/blob/master/python/netvlad_tf/layers.py
+    K = num_clusters
+    # D: number of (descriptor) dimensions.
+    D = inputs.get_shape()[-1]
 
-tf.app.flags.DEFINE_string('tables', '', 'table_list')
-tf.app.flags.DEFINE_string('task_index', None, 'worker task index')
-tf.app.flags.DEFINE_string('ps_hosts', "", "ps hosts")
-tf.app.flags.DEFINE_string('worker_hosts', "", "worker hosts")
-tf.app.flags.DEFINE_string('job_name', "", "job name:worker or ps")
-tf.app.flags.DEFINE_string("buckets", None, "oss buckets")
+    # soft-assignment.
+    s = tf.layers.conv1d(inputs, K, kernel_size=1, use_bias=False,
+                         name='assignment')
+    a = tf.nn.softmax(s, dim=-1)
 
-tf.app.flags.DEFINE_float("drop_rate", 0.0, "dropout")
-tf.app.flags.DEFINE_float("init_learning_rate", 0.0001, "initialize learning rate")
-tf.app.flags.DEFINE_float("decay_step", 6000, "decay steps")
-tf.app.flags.DEFINE_float("decay_rate", 0.95, "decay rate")
-tf.app.flags.DEFINE_float("cost_weight", 1, "weight of cost")
+    # Dims used hereafter: batch, frame_num, desc_coeff, K
+    # Move cluster assignment to corresponding dimension.
+    a = tf.expand_dims(a, -2)
 
-FLAGS = tf.app.flags.FLAGS
+    # VLAD core.
+    C = tf.get_variable('cluster_centers', [1, 1, D, K],
+                        initializer=cluster_initializer,
+                        dtype=inputs.dtype)
+    # (batch, frame_num, D ,1 ) + [1, 1, D, K]
+    v = tf.expand_dims(inputs, -1) + C
+    v = a * v
+    v = tf.reduce_sum(v, axis=[1])
+    v = tf.transpose(v, perm=[0, 2, 1])
 
-print('tables:', FLAGS.tables)
-print('task_index:', FLAGS.task_index)
-print('ps_hosts', FLAGS.ps_hosts)
-print('worker_hosts', FLAGS.worker_hosts)
-print('job_name', FLAGS.job_name)
-
-# define variables
-batch_size = 32
-FRAME_NUM = 50
-FRAME_DIM = 1536
-
-drop_rate = FLAGS.drop_rate
-init_learning_rate = FLAGS.init_learning_rate
-decay_step = FLAGS.decay_step
-decay_rate = FLAGS.decay_rate
-cost_weight = FLAGS.cost_weight
-
-tables = FLAGS.tables.split(",")
-train_table = tables[0]
-valid_table = tables[1]
-print('train_table:{}'.format(train_table))
-print('valid_table:{}'.format(valid_table))
-
-ps_spec = FLAGS.ps_hosts.split(",")
-worker_spec = FLAGS.worker_hosts.split(",")
-cluster = tf.train.ClusterSpec({"ps": ps_spec, "worker": worker_spec})
-worker_count = len(worker_spec)
-task_index = int(FLAGS.task_index)
-
-is_chief = task_index == 0  # regard worker with index 0 as chief
-print('is chief:', is_chief)
-
-server = tf.train.Server(cluster, job_name=FLAGS.job_name, task_index=task_index)
-if FLAGS.job_name == "ps":
-    server.join()
-
-worker_device = "/job:worker/task:%d/cpu:%d" % (task_index, 0)
-print("worker device:", worker_device)
-print(
-    'script file:{}, dropout:{}, batch_size:{}, init_learning_rate:{}, decay_step:{}, decay_rate:{}, cost_weight:{}'.format(
-        os.path.basename(__file__), drop_rate, batch_size, init_learning_rate, decay_step, decay_rate, cost_weight))
-
-# 1. load data
-with tf.device(worker_device):
-    # filename_queue = tf.train.string_input_producer([FLAGS.tables], num_epochs=100000000)
-    dataset = tf.data.TableRecordDataset([train_table],
-                                         record_defaults=(np.int64(1), 1, '', ''),
-                                         selected_cols="video_id,frame_num,tag,feature",
-                                         slice_count=worker_count,
-                                         slice_id=task_index)
-
-    dataset = dataset.batch(batch_size)
-    dataset = dataset.repeat(100000000)
-    iterator = dataset.make_initializable_iterator()
-    next_elems = iterator.get_next()
-    (video_id_batch, frame_num_batch, tags_batch, frame_feat_batch) = next_elems
-
-    # valid dataset
-    valid_dataset = tf.data.TableRecordDataset([valid_table],
-                                               record_defaults=(np.int64(1), 1, '', ''),
-                                               selected_cols="video_id,frame_num,tag,feature")
-    valid_dataset = valid_dataset.batch(batch_size)
-    valid_dataset = valid_dataset.repeat(100000000)
-    valid_iterator = valid_dataset.make_initializable_iterator()
-    (valid_video_id, valid_frame_num, valid_tags, valid_frame_feat) = valid_iterator.get_next()
-
-# 2. construct network
-available_worker_device = "/job:worker/task:%d" % (task_index)
-with tf.device(tf.train.replica_device_setter(worker_device=available_worker_device, cluster=cluster)):
-    global_step = tf.Variable(0, name="global_step", trainable=False)
-
+    return v
 
 def NetVLAD_layer(nets, frame_num, d, word_num=64, scope_name='vlad'):
     """
@@ -154,7 +93,9 @@ def construct_network(frame_feat_input, tags_input, reuse, is_training):
     :return:
     """
     with tf.variable_scope('frame', reuse=reuse) as scope:
-        nets = NetVLAD_layer(frame_feat_input, FRAME_NUM, FRAME_DIM)
+        nets = netVLAD(frame_feat_input, num_clusters = 128, assign_weight_initializer=None,
+                       cluster_initializer=None, skip_postnorm=False)
+        # nets = NetVLAD_layer(frame_feat_input, FRAME_NUM, FRAME_DIM)
         nets = slim.batch_norm(nets,
                                decay=0.9997,
                                epsilon=0.001,
