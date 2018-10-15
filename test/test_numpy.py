@@ -17,5 +17,17 @@ def test_numpy_array():
     print(ones_arr)
 
 
+def test_broadcast():
+    """
+    不同形状的矩阵或数组加减乘除，如果形状不同，其中一个必须为1
+    :return:
+    """
+    a_np = np.random.random(size=(32, 50, 128, 1))
+    b_np = np.random.random(size=(1, 1, 128, 1024))
+    c_np = a_np + b_np
+    print('test_tf_plus, shape of c_np:{}'.format(c_np.shape))  # (32, 50, 128, 1024)
+
+
 if __name__ == '__main__':
     test_numpy_array()
+    test_broadcast()
