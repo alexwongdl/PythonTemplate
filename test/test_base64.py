@@ -47,6 +47,8 @@ def test_base64():
 import PIL
 from PIL import Image
 from io import BytesIO
+
+
 # import cStringIO for python 2
 
 
@@ -54,7 +56,7 @@ def test_base64_pillow():
     img = cv2.imread('data/laska.png')
     pil_img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
 
-    buffer = BytesIO() # buffer = cStringIO.StringIO() for python2
+    buffer = BytesIO()  # buffer = cStringIO.StringIO() for python2
     pil_img.save(buffer, format="JPEG", quality=100)
     b64code = base64.b64encode(buffer.getvalue())
 
@@ -66,6 +68,7 @@ def test_base64_pillow():
     cv2.imshow('img', img)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
 
 def opencv_img_to_string():
     img = cv2.imread('data/laska.png')
@@ -81,7 +84,23 @@ def opencv_img_to_string():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
+def numpy_arr_to_string():
+    arr = np.arange(12).reshape(3, 4)
+    bytesio = BytesIO()
+    np.savetxt(bytesio, arr)
+    content = bytesio.getvalue()
+    print(content)
+
+    b64_code = base64.b64encode(content)
+    b64_decode = base64.b64decode(b64_code)
+
+    arr = np.loadtxt(BytesIO(b64_decode))
+    print(arr)
+
+
 if __name__ == '__main__':
     # test_base64()
     # test_base64_pillow()
-    opencv_img_to_string()
+    # opencv_img_to_string()
+    numpy_arr_to_string()
