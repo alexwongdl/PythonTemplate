@@ -70,8 +70,10 @@ def test_base64_pillow():
 def opencv_img_to_string():
     img = cv2.imread('data/laska.png')
     img_str = cv2.imencode('.jpg', img)[1].tostring()
+    b64_code = base64.b64encode(img_str)
 
-    nparr = np.fromstring(img_str, np.uint8)
+    str_decode = base64.b64decode(b64_code)
+    nparr = np.fromstring(str_decode, np.uint8)
     # img_restore = cv2.imdecode(nparr, cv2.CV_LOAD_IMAGE_COLOR) for python 2
     img_restore = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 
