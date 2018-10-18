@@ -67,7 +67,19 @@ def test_base64_pillow():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+def opencv_img_to_string():
+    img = cv2.imread('data/laska.png')
+    img_str = cv2.imencode('.jpg', img)[1].tostring()
+
+    nparr = np.fromstring(img_str, np.uint8)
+    # img_restore = cv2.imdecode(nparr, cv2.CV_LOAD_IMAGE_COLOR) for python 2
+    img_restore = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+
+    cv2.imshow('img', img_restore)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    test_base64()
+    # test_base64()
     # test_base64_pillow()
+    opencv_img_to_string()
