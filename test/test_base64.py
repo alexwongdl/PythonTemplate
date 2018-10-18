@@ -8,6 +8,7 @@ import numpy as np
 import tensorflow as tf
 import cv2
 
+
 def test_base64():
     # numpy --> base64 --> numpy
     t = np.arange(25, dtype=np.float32)
@@ -15,9 +16,15 @@ def test_base64():
     s = base64.urlsafe_b64encode(t)
     r = base64.decodestring(s)
     q = np.frombuffer(r, dtype=np.float32)
-
     print(t)
     print(q)
+
+    # img = cv2.imread('data/laska.png')
+    # img_str = base64.urlsafe_b64encode(img)
+    # img_decode = base64.decodestring(img_str)
+    # img_np = np.frombuffer(img_decode, dtype=np.uint8)
+    # img_q = cv2.imdecode(img_np, cv2.COLOR_BGR2RGB)
+    # cv2.imshow('img_q', img_q)
 
     # numpy --> image_str --> base64 --> image_str --> numpy
     img = cv2.imread('data/laska.png')
@@ -37,5 +44,30 @@ def test_base64():
     # print(np.allclose(q, t))
 
 
+import PIL
+from PIL import Image
+from io import BytesIO
+# import cStringIO for python 2
+
+
+def test_base64_pillow():
+    img = cv2.imread('data/laska.png')
+    pil_img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+
+    buffer = BytesIO() # buffer = cStringIO.StringIO() for python2
+    pil_img.save(buffer, format="JPEG", quality=100)
+    b64code = base64.b64encode(buffer.getvalue())
+
+    img_base64_data = base64.b64decode(b64code)
+    img_nparr = np.fromstring(img_base64_data, np.uint8)
+    img = cv2.imdecode(img_nparr, cv2.COLOR_BGR2RGB)
+
+    print(img.shape)
+    cv2.imshow('img', img)
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
+
+
 if __name__ == '__main__':
     test_base64()
+    # test_base64_pillow()
