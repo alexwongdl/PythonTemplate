@@ -268,25 +268,24 @@ def process_batch(dir_path):
         os.makedirs(save_path)
 
     file_name_list = [
-        # 'TB2w_BnXNGYBuNjy0FnXXX5lpXa_!!3649421206.jpg',
-        # 'TB1eRQsmvNNTKJjSspkwu1eWFXa.png',
-        # 'TB1ix3AXfDH8KJjy1Xcwu3pdXXa.png',
-        # 'TB28dHToH0kpuFjy0FjXXcBbVXa_!!2453680503.jpg',
-        # 'TB2GO2vjSJjpuFjy0FdXXXmoFXa_!!263671308.jpg',
-        # 'TB2qluDtFXXXXXKXXXXXXXXXXXX_!!2097705387.jpg',
-        # 'TB2uD9Ydm3PL1JjSZFxXXcBBVXa_!!2555391676.jpg',
-        # 'TB29XPrpv9TBuNjy1zbXXXpepXa_!!3221418665.jpg',
-        # 'TB16UaiXvv85uJjSZFxwu1l4XXa.png',
-        # 'TB1boN.RpXXXXb3XXXXwu0bFXXX.png',
-        # 'TB1gj20ih6I8KJjSszfwu1ZVXXa.png',
-        # 'TB2oTY2gYwTMeJjSszfXXXbtFXa_!!2780005954.jpg',
-        # 'TB2xGKsoeySBuNjy1zdXXXPxFXa_!!2097705387.jpg',
-        # 'TB16UaiXvv85uJjSZFxwu1l4XXa.png',
-        # 'TB1gaZ2bxPI8KJjSspfwu3CFXXa.png',
-        # 'TB20h5Ifoo09KJjSZFDXXb9npXa_!!1972027918.png',
-        # 'TB20LH0b22H8KJjy0FcXXaDlFXa_!!2072344000.png',
-        # 'TB29NaYpM0kpuFjSspdXXX4YXXa_!!489673344.png',
-        # 'TB2rc_OiiCYBuNkHFCcXXcHtVXa_!!751075004.png',
+        'TB2w_BnXNGYBuNjy0FnXXX5lpXa_!!3649421206.jpg',
+        'TB1eRQsmvNNTKJjSspkwu1eWFXa.png',
+        'TB1ix3AXfDH8KJjy1Xcwu3pdXXa.png',
+        'TB28dHToH0kpuFjy0FjXXcBbVXa_!!2453680503.jpg',
+        'TB2GO2vjSJjpuFjy0FdXXXmoFXa_!!263671308.jpg',
+        'TB2qluDtFXXXXXKXXXXXXXXXXXX_!!2097705387.jpg',
+        'TB2uD9Ydm3PL1JjSZFxXXcBBVXa_!!2555391676.jpg',
+        'TB29XPrpv9TBuNjy1zbXXXpepXa_!!3221418665.jpg',
+        'TB16UaiXvv85uJjSZFxwu1l4XXa.png',
+        'TB1boN.RpXXXXb3XXXXwu0bFXXX.png',
+        'TB1gj20ih6I8KJjSszfwu1ZVXXa.png',
+        'TB2oTY2gYwTMeJjSszfXXXbtFXa_!!2780005954.jpg',
+        'TB2xGKsoeySBuNjy1zdXXXPxFXa_!!2097705387.jpg',
+        'TB1gaZ2bxPI8KJjSspfwu3CFXXa.png',
+        'TB20h5Ifoo09KJjSZFDXXb9npXa_!!1972027918.png',
+        'TB20LH0b22H8KJjy0FcXXaDlFXa_!!2072344000.png',
+        'TB29NaYpM0kpuFjSspdXXX4YXXa_!!489673344.png',
+        'TB2rc_OiiCYBuNkHFCcXXcHtVXa_!!751075004.png',
         'TB1k0bHkDTI8KJjSsphSuwFppXa.jpg'
     ]
 
@@ -343,5 +342,5 @@ def test_rgba(dir_path):
 
 if __name__ == '__main__':
     print('test...')
-    process_batch('/Users/alexwang/data/image_resize/image_org')
+    process_batch('./data')
     # test_rgba('/Users/alexwang/data/image_resize/image_org')
