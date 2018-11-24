@@ -71,8 +71,12 @@ def test_base64_pillow():
 
 
 def opencv_img_to_string():
+    """
+    使用imencode、imdecode
+    :return:
+    """
     img = cv2.imread('data/laska.png')
-    img_str = cv2.imencode('.jpg', img)[1].tostring()
+    img_str = cv2.imencode('.jpg', img)[1].tostring()  # 将图片格式转换(编码)成流数据，放到内存缓存中，然后转化成string格式
     b64_code = base64.b64encode(img_str)
 
     str_decode = base64.b64decode(b64_code)
@@ -86,14 +90,18 @@ def opencv_img_to_string():
 
 
 def numpy_arr_to_string():
+    """
+    使用BytesIO，仅限于1维或者2维矩阵
+    :return:
+    """
     arr = np.arange(12).reshape(3, 4)
     bytesio = BytesIO()
     np.savetxt(bytesio, arr)
     content = bytesio.getvalue()
     print(content)
 
-    b64_code = base64.b64encode(content)
-    b64_decode = base64.b64decode(b64_code)
+    b64_code = base64.b64encode(content) b64_code = base64.urlsafe_b64encode(content)
+    b64_decode = base64.b64decode(b64_code) # b64_decode = base64.urlsafe_b64decode(b64_code)
 
     arr = np.loadtxt(BytesIO(b64_decode))
     print(arr)
