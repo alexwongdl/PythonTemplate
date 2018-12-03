@@ -100,7 +100,7 @@ def numpy_arr_to_string():
     content = bytesio.getvalue()
     print(content)
 
-    b64_code = base64.b64encode(content) b64_code = base64.urlsafe_b64encode(content)
+    b64_code = base64.b64encode(content) # b64_code = base64.urlsafe_b64encode(content)
     b64_decode = base64.b64decode(b64_code) # b64_decode = base64.urlsafe_b64decode(b64_code)
 
     arr = np.loadtxt(BytesIO(b64_decode))
