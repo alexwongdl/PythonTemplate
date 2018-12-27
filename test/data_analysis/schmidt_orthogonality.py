@@ -17,12 +17,12 @@ def check_orthogonality(matrix):
 
     for i in range(n):
         for j in range(i + 1, n):
-            if np.dot(matrix[:, i], matrix[:, j]) != 0:
+            if abs(np.dot(matrix[:, i], matrix[:, j])) > 1e-8:
                 return False
     return True
 
 
-def expand_matrix(matrix):
+def expand_matrix_with_zeros(matrix):
     """
     :param matrix: m x n matrix, m >= n
     :return:
@@ -30,6 +30,32 @@ def expand_matrix(matrix):
     m, n = matrix.shape
     new_martix = np.zeros(shape=(m, m), dtype=matrix.dtype)
     new_martix[:, 0:n] = matrix
+    return new_martix
+
+
+def expand_to_square_matrix(matrix):
+    """
+    构建一个m x m 的单位矩阵, 每个列向量和matrix的向量做判断是否正交
+    :param matrix: m x n matrix, m >= n
+    :return:
+    """
+    # TODO
+    m, n = matrix.shape
+    eye_matrix = np.eye(m, m)
+    new_martix = np.zeros(shape=(m, m), dtype=np.float)
+    new_martix[:, 0:n] = matrix
+
+    next_index = n
+    for i in range(m):
+        succeed = True
+        for j in range(n):
+            # TODO 用施密特正交判断是否可以正交化
+            if abs(np.dot(matrix[:, j], eye_matrix[:, i])) > 1e-8:
+                succeed = False
+                break
+        if succeed:
+            new_martix[:, next_index] = eye_matrix[:, i]
+
     return new_martix
 
 
@@ -41,13 +67,14 @@ def schmidt_orthogonality(matrix_org, debug=False):
     """
     m, n = matrix_org.shape
     if m < n:
-        print('error: input matrix should be full rank')
-        return None
+        print('error: row num should be greater than column num')
+        return None, None
 
     matrix_ortho = matrix_org.copy()
     matrix_ortho = np.asarray(matrix_ortho, dtype=np.float)
     coefficient = np.zeros(shape=(m, n))
     coefficient[0, 0] = 1
+
     for i in range(1, n):  # next column
         coefficient[i, i] = 1
         for j in range(i):
@@ -63,32 +90,58 @@ def schmidt_orthogonality(matrix_org, debug=False):
 
             matrix_ortho[:, i] -= k_j * b_j
 
+    for i in range(n):
+        devider = np.dot(matrix_ortho[:, i], matrix_ortho[:, i])
+        if abs(devider) < 1e-16:  # 0
+            matrix_ortho[:, i] *= 0
+        else:
+            devider = np.sqrt(devider)
+            matrix_ortho[:, i] /= devider
+            coefficient[i, :] *= devider
+
     print('result:', matrix_ortho)
     return matrix_ortho, coefficient
 
 
-if __name__ == '__main__':
-    # arr = np.array([[1, 2, 2],
-    #                 [1, 0, 2],
-    #                 [0, 1, 1]])
-    # schmidt_orthogonality(arr, True)
-    #
-    # arr = np.array([[1, -1, 1],
-    #                 [-1, 1, 1],
-    #                 [0, 1, 1]])
-    # schmidt_orthogonality(arr, True)
-    #
-    # arr = np.array([[1],
-    #                 [-1],
-    #                 [0]])
-    # schmidt_orthogonality(arr, True)
+def test_orgthogonality():
+    arr = np.array([[1, 2, 2],
+                    [1, 0, 2],
+                    [0, 1, 1]])
+    arr_ortho, coefficient = schmidt_orthogonality(arr, True)
+    print('coefficient:', coefficient)
+    multi_result = np.dot(arr_ortho, coefficient)
+    print('multi_result:', multi_result)
+    print('-----------------------------------------------')
+
+    arr = np.array([[1, -1, 1],
+                    [-1, 1, 1],
+                    [0, 1, 1]])
+    schmidt_orthogonality(arr, True)
+    print('-----------------------------------------------')
+
+    arr = np.array([[1],
+                    [-1],
+                    [0]])
+    schmidt_orthogonality(arr, True)
+    print('-----------------------------------------------')
 
     arr = np.array([[1, -1],
                     [-1, 1],
                     [0, 1]])
     arr_ortho, coefficient = schmidt_orthogonality(arr, True)
-    print(expand_matrix(arr))
+    print(expand_matrix_with_zeros(arr))
     print('coefficient:', coefficient)
     print(check_orthogonality(arr))
     print(check_orthogonality(arr_ortho))
 
+    print('expand matrix:', expand_to_square_matrix(arr_ortho))
+    print('-----------------------------------------------')
+
+    arr = np.array([[2, 0, 5],
+                    [0, 3.3, 2],
+                    [0, 0, 0]])
+    schmidt_orthogonality(arr, True)
+
+
+if __name__ == '__main__':
+    test_orgthogonality()
