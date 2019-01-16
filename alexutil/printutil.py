@@ -30,6 +30,7 @@ On 2017-09-21
 \033[1;31;40m    <!--1-高亮显示 31-前景色红色  40-背景色黑色-->
 \033[0m          <!--采用终端默认设置，即取消颜色设置-->
 """
+import datetime
 
 ANSI_BLACK = 30
 ANSI_RED = 31
@@ -39,7 +40,6 @@ ANSI_BLUE = 34
 ANSI_PURPLE = 35
 ANSI_CYAN = 36
 ANSI_WHITE = 37
-
 
 ANSI_BLACK_BACKGROUND = 40
 ANSI_RED_BACKGROUND = 41
@@ -57,6 +57,7 @@ MOD_FLICKER = 5
 MOD_INVERSE = 7
 MOD_HIDE = 8
 
+
 def mod_print(message, fg=ANSI_WHITE, bg=ANSI_BLACK_BACKGROUND, mod=MOD_DEFAULT):
     """
     格式化输出
@@ -68,6 +69,7 @@ def mod_print(message, fg=ANSI_WHITE, bg=ANSI_BLACK_BACKGROUND, mod=MOD_DEFAULT)
     """
     print('\033[{};{};{}m'.format(fg, bg, mod) + message + '\033[0m')
 
+
 def test():
     print('\033[1;32;40m')
     print('*' * 50)
@@ -77,6 +79,7 @@ def test():
     print('*TIME:\t', '22:28')
     print('*' * 50)
     print('\033[0m')
+
 
 def arg_parse_print(FLAGS):
     """
@@ -88,17 +91,22 @@ def arg_parse_print(FLAGS):
     for name in FLAGS.__dict__.keys():
         value = FLAGS.__dict__[name]
         if type(value) == float:
-            print('\t%s: %f'%(name, value))
+            print('\t%s: %f' % (name, value))
         elif type(value) == int:
-            print('\t%s: %d'%(name, value))
+            print('\t%s: %d' % (name, value))
         elif type(value) == str:
-            print('\t%s: %s'%(name, value))
+            print('\t%s: %s' % (name, value))
         elif type(value) == bool:
-            print('\t%s: %s'%(name, value))
+            print('\t%s: %s' % (name, value))
         else:
             print('\t%s: %s' % (name, value))
 
     print('[End of configuration]')
+
+
+def time_print(string):
+    print('[{}] {}'.format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), string))
+
 
 if __name__ == "__main__":
     # print("__main__")
@@ -107,3 +115,4 @@ if __name__ == "__main__":
     mod_print("python colorful print", ANSI_RED, ANSI_WHITE_BACKGROUND, MOD_UNDERLINE)
     mod_print("python colorful print", ANSI_YELLOW, ANSI_BLACK_BACKGROUND, MOD_HIGHLIGHT)
     mod_print("python colorful print", ANSI_YELLOW, ANSI_BLACK_BACKGROUND, MOD_UNDERLINE)
+    time_print('test time print')
