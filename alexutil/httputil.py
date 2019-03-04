@@ -8,10 +8,32 @@ import json
 
 import logging
 import urllib.request
+import traceback
+
+from PIL import Image
 
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
+def download_image_to_memory(img_url):
+    """
+    download image to memory with PIL Image format
+    :param img_url:
+    :return:
+    """
+    try:
+        response = requests.get(img_url, timeout=600, stream=True)
+        response.raw.decode_content = True
+        image = Image.open(response.raw)
+
+        if not response.ok:
+            return None
+
+        return image
+    except Exception as e:
+        print('download failed:', img_url)
+        traceback.print_exc()
+        return None
 
 def image_download(url, save_path):
     """
