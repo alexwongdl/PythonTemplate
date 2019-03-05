@@ -15,6 +15,23 @@ from PIL import Image
 logging.getLogger("requests").setLevel(logging.WARNING)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
+
+def download_image_to_memory_with_retry(img_url, retry=5):
+    """
+    :param img_url:
+    :param retry:
+    :return:
+    """
+    try_time = 0
+    image = None
+    while try_time < retry and not image:
+        image = download_image_to_memory(img_url)
+        if not image:
+            try_time += 1
+            print('download image {} failed, retry:{}'.format(img_url, try_time))
+    return image
+
+
 def download_image_to_memory(img_url):
     """
     download image to memory with PIL Image format
@@ -34,6 +51,24 @@ def download_image_to_memory(img_url):
         print('download failed:', img_url)
         traceback.print_exc()
         return None
+
+
+def image_download_with_retry(img_url, save_path, retry=5):
+    """
+    :param img_url:
+    :param save_path:
+    :param retry:
+    :return:
+    """
+    try_time = 0
+    succeed = False
+    while try_time < retry and not succeed:
+        succeed = image_download(img_url, save_path)
+        if not succeed:
+            try_time += 1
+            print('download image {} failed, retry:{}'.format(img_url, try_time))
+    return succeed
+
 
 def image_download(url, save_path):
     """
