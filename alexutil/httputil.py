@@ -3,6 +3,7 @@
 Created by Alex Wang
 On 2017-08-31
 """
+import time
 import requests
 import json
 
@@ -29,6 +30,7 @@ def download_image_to_memory_with_retry(img_url, retry=5):
         if not image:
             try_time += 1
             print('download image {} failed, retry:{}'.format(img_url, try_time))
+            time.sleep(0.2)
     return image
 
 
@@ -67,6 +69,7 @@ def image_download_with_retry(img_url, save_path, retry=5):
         if not succeed:
             try_time += 1
             print('download image {} failed, retry:{}'.format(img_url, try_time))
+            time.sleep(0.2)
     return succeed
 
 
