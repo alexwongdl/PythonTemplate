@@ -62,7 +62,8 @@ def test_base64_pillow():
 
     img_base64_data = base64.b64decode(b64code)
     img_nparr = np.fromstring(img_base64_data, np.uint8)
-    img = cv2.imdecode(img_nparr, cv2.COLOR_BGR2RGB)
+    # img = cv2.imdecode(img_nparr, cv2.COLOR_BGR2RGB)
+    img = cv2.imdecode(img_nparr, cv2.IMREAD_COLOR)
 
     print(img.shape)
     cv2.imshow('img', img)
@@ -109,6 +110,6 @@ def numpy_arr_to_string():
 
 if __name__ == '__main__':
     # test_base64()
-    # test_base64_pillow()
-    # opencv_img_to_string()
+    test_base64_pillow()
+    opencv_img_to_string()
     numpy_arr_to_string()
