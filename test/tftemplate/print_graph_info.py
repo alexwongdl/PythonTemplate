@@ -138,8 +138,8 @@ def test_checkpoint_variables():
         InceptionV4/AuxLogits/Conv2d_2a/weights [5, 5, 128, 768]
     :return:
     """
-    model_dir = '/Users/alexwang/data/'
-    checkpoint_path = os.path.join(model_dir, 'inception_v4.ckpt')
+    model_dir = '/Users/alexwang/workspace/vip_image_face_analysis/data/model'
+    checkpoint_path = os.path.join(model_dir, 'model')
     for var_name, shape in tf.contrib.framework.list_variables(checkpoint_path):
         print(var_name, shape)
 
