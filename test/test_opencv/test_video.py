@@ -15,6 +15,13 @@ def test_video_read_and_write():
         ret, frame = cap.read()
         if not ret:
             break
+
+        cv2.imshow('Frame',frame)
+        cv2.waitKey(100)
+        # Press Q on keyboard to  exit
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            cv2.destroyAllWindows()
+            break
         out.write(frame)
 
     cap.release()

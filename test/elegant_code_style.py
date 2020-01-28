@@ -29,23 +29,26 @@ def test_zip():
     for i, str in zip(tuple_one, tuplt_two):
         print("{}\t{}".format(i, str))
 
+
 def test_unzip():
     print("test unzip.........")
-    tuple_list = [(1,2),(1,2),(1,2)]
-    a,b = zip(* tuple_list)
+    tuple_list = [(1, 2), (1, 2), (1, 2)]
+    a, b = zip(*tuple_list)
     print(a)
     print(b)
+
 
 def test_join():
     li = ["one", "two", "three", "four", "five"]
     print(",".join(li))
+
 
 def test_read():
     """
     读取文件
     :return:
     """
-    count  = 1
+    count = 1
     file_path = "E://temp/code/alarm.py"
     for line in open(file_path, 'r', encoding='UTF-8'):
         count += 1
@@ -56,12 +59,19 @@ def test_read():
             count += 1
     print(count)
 
+
 def test_num():
     str = "2087"
     int_num = int(str)
     print(int_num)
 
+
+def test_map():
+    a = [1, 2, 3, 4, 5]
+    print('test_map:', ','.join(map(str, a)))
+
 if __name__ == "__main__":
     test_num()
-    test_read()
+    # test_read()
     test_unzip()
+    test_map()
