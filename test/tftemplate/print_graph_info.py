@@ -138,13 +138,10 @@ def test_checkpoint_variables():
         InceptionV4/AuxLogits/Conv2d_2a/weights [5, 5, 128, 768]
     :return:
     """
-<<<<<<< HEAD
     model_dir = '/Users/alexwang/workspace/vip_image_face_analysis/data/model'
     checkpoint_path = os.path.join(model_dir, 'model')
-=======
     model_dir = '/Users/alexwang/data/video_select/train_beauty_log'
     checkpoint_path = os.path.join(model_dir, 'save-28999-0.926119962159')
->>>>>>> experience
     for var_name, shape in tf.contrib.framework.list_variables(checkpoint_path):
         print(var_name, shape)
 

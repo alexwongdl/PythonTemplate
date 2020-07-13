@@ -44,6 +44,24 @@ def test_base64():
     # print(np.allclose(q, t))
 
 
+def test_decode():
+    # encode
+    image_org = cv2.imread("data/laska.png")
+    img_str = cv2.imencode('.png', image_org)[1].tostring()
+    print(image_org.shape)
+    frame_str = base64.urlsafe_b64encode(img_str)
+
+    # decode
+    image = base64.urlsafe_b64decode(frame_str)
+    image = np.asarray(bytearray(image), dtype="uint8")
+
+    bgr_frame = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    print(bgr_frame.shape)
+    print(np.allclose(image_org, bgr_frame))
+    cv2.imshow('a', bgr_frame)
+    cv2.waitKey(0)
+
+
 import PIL
 from PIL import Image
 from io import BytesIO
@@ -101,8 +119,8 @@ def numpy_arr_to_string():
     content = bytesio.getvalue()
     print(content)
 
-    b64_code = base64.b64encode(content) # b64_code = base64.urlsafe_b64encode(content)
-    b64_decode = base64.b64decode(b64_code) # b64_decode = base64.urlsafe_b64decode(b64_code)
+    b64_code = base64.b64encode(content)  # b64_code = base64.urlsafe_b64encode(content)
+    b64_decode = base64.b64decode(b64_code)  # b64_decode = base64.urlsafe_b64decode(b64_code)
 
     arr = np.loadtxt(BytesIO(b64_decode))
     print(arr)
