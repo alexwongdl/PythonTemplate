@@ -41,5 +41,17 @@ def test_tensor():
     print(f)
 
 
+def test_grad():
+    x = torch.ones(2, 2, requires_grad=True)
+    print(x)
+    y = x + 2
+    z = y * y * 3
+    out = z.mean()
+    out.backward()
+    print(x.grad)
+    print(y.grad)
+    print(z.grad)
+
 if __name__ == '__main__':
-    test_tensor()
+    # test_tensor()
+    test_grad()

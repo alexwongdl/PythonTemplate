@@ -45,8 +45,20 @@ def test_npz():
     print('str_a:{}'.format(data['str_a']))
     print('dict_a:{}'.format(data['dict_a']))
 
+def test_tostring_fromstring():
+    """
+
+    :return:
+    """
+    arr = np.reshape(np.array(range(20)), newshape=(4, 5))
+    print(arr)
+    arr_str = arr.tostring()
+    arr_rec = np.fromstring(arr_str, dtype=np.int32)
+    print(arr_rec)
+
 
 if __name__ == '__main__':
     test_numpy_array()
     test_broadcast()
-    test_npz()
+    # test_npz()
+    test_tostring_fromstring()
