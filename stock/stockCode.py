@@ -92,7 +92,7 @@ class StockInfo:
         #     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36"}
         req = request.Request(url, headers=headers)
         try:
-            content = request.urlopen(req).read()
+            content = request.urlopen(req, timeout=30).read()
             return content
         except Exception as e:
             traceback.print_exc()
@@ -261,6 +261,50 @@ class StockInfo:
         print("当前价格:{}, 涨跌:{}%, 社保基金:{}".format(cur_price, change, shebao_result))
         return cur_price, change, shebao_result
 
+    def gaosongzhuan(self, stock_num, stock_id):
+        # http://quotes.money.163.com/f10/fhpg_600690.html#01d05
+        url = 'http://quotes.money.163.com/f10/fhpg_' + str(stock_id).zfill(6) + '.html#01d05'
+        print("当前信息:", url)
+        content = self.get_url_content(stock_num, url)
+        if content is None:
+            return None, None, None, None, None, None
+
+        soup = BeautifulSoup(content, "lxml")
+        # print(soup.body.prettify())
+        # ------------------ 送股/派息 -----------------
+        guxi_table = soup.find('table', {"class": "table_bg001 border_box limit_sale"})
+        trs = guxi_table.find_all('tr')
+        tr = trs[2]
+        print("trs2:{}".format(tr))
+        # for tr in trs[1:-1]:
+        #     print(tr)
+        cols = tr.find_all('td')
+        cols = [ele.text.replace(" ", "").strip() for ele in cols]
+        if len(cols) < 7:
+            return None, None, None, None, None, None
+        gonggao_day = cols[0]
+        guquan_dengji = cols[5]
+        guquan_chixi = cols[6]
+
+        songgu = 0
+        zhuanzen = 0
+        paixi = 0
+        try:
+            songgu = float(cols[2])
+        except Exception as e:
+            pass
+        try:
+            zhuanzen = float(cols[3])
+        except Exception as e:
+            pass
+        try:
+            paixi = float(cols[4])
+        except Exception as e:
+            pass
+
+        print(gonggao_day, songgu, zhuanzen, paixi, guquan_dengji, guquan_chixi)
+        return gonggao_day, songgu, zhuanzen, paixi, guquan_dengji, guquan_chixi
+
     def domain_compare(self, stock_num, stock_id, stock_name):
         url = 'http://quotes.money.163.com/f10/hydb_' + str(stock_id).zfill(6) + '.html#01g02'
         print("行业对比:", url)
@@ -333,6 +377,9 @@ class StockInfo:
         # 行业信息:
         stock_shiyinglv, domain_avg_shiyinglv, domain_other_stock = self.domain_compare(stock_num, stock_id, stock_name)
 
+        # 送股/派息
+        gonggao_day, songgu, zhuanzen, paixi, guquan_dengji, guquan_chixi = self.gaosongzhuan(stock_num, stock_id)
+
     def get_all_shebao_stock(self, write_index):
         """
         获取所有社保投资的股票
@@ -356,11 +403,20 @@ class StockInfo:
         ws.write(1, 9, u'市盈率%')
         ws.write(1, 10, u'行业平均市盈率%')
         ws.write(1, 11, u'行业头部股票市盈率')
+        ws.write(1, 12, u'送股')
+        ws.write(1, 13, u'转增')
+        ws.write(1, 14, u'派息')
+        ws.write(1, 15, u'除权登记')
+        ws.write(1, 16, u'除权日')
+        ws.write(1, 17, u'年份')
 
         line_index = 2
         for rx in range(2, sheet.nrows):
             row = sheet.row(rx)
             stock_num, stock_name, stock_area, stock_id, url = row
+            # if "*ST" in stock_name.value:
+            #     continue
+
             stock_num_format = stock_num.value
             stock_name = stock_name.value
             stock_area = stock_area.value
@@ -391,6 +447,9 @@ class StockInfo:
             # 行业信息: 股票市盈率%, 行业平均市盈率%, 行业头部股票市盈率
             stock_shiyinglv, domain_avg_shiyinglv, domain_other_stock = self.domain_compare(stock_num, stock_id,
                                                                                             stock_name)
+            # 送股/派息
+            gonggao_day, songgu, zhuanzen, paixi, guquan_dengji, guquan_chixi = self.gaosongzhuan(stock_num, stock_id)
+
             ws.write(line_index, 0, stock_num_format)
             ws.write(line_index, 1, stock_name)
             ws.write(line_index, 2, stock_area)
@@ -410,6 +469,16 @@ class StockInfo:
                 ws.write(line_index, 11, "")
             else:
                 ws.write(line_index, 11, ",  ".join(["__".join(item) for item in domain_other_stock]))
+
+            ws.write(line_index, 12, songgu)
+            ws.write(line_index, 13, zhuanzen)
+            ws.write(line_index, 14, paixi)
+            ws.write(line_index, 15, guquan_dengji)
+            ws.write(line_index, 16, guquan_chixi)
+            if guquan_chixi is None:
+                ws.write(line_index, 17, "")
+            else:
+                ws.write(line_index, 17, guquan_chixi.split('-')[0])
             wb.save(save_file_name)
             line_index += 1
             print("")
@@ -467,4 +536,5 @@ if __name__ == '__main__':
     # list_all_stock()
     stock_info = StockInfo()
     # stock_info.test(1, "平安银行")
+    # stock_info.test(600507, "方大特刚")
     stock_info.get_all_shebao_stock(write_index=3)

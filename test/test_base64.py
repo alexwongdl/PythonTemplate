@@ -7,6 +7,8 @@ import base64
 import numpy as np
 import tensorflow as tf
 import cv2
+from PIL import Image
+import pickle
 
 
 def test_base64():
@@ -65,6 +67,7 @@ def test_decode():
 import PIL
 from PIL import Image
 from io import BytesIO
+import time
 
 
 # import cStringIO for python 2
@@ -89,11 +92,30 @@ def test_base64_pillow():
     cv2.destroyAllWindows()
 
 
+def test_base64_pillow_1():
+    with open('data/laska.png', "rb") as image_file:
+        encoded_string = base64.urlsafe_b64encode(image_file.read())
+
+    img = Image.open(BytesIO(base64.urlsafe_b64decode(encoded_string)))
+    print(img.size)
+    img.show()
+    # time.sleep(30)
+    img.save("data/laska_pil.png")
+
+
 def opencv_img_to_string():
     """
     使用imencode、imdecode
     :return:
     """
+    a = np.arange(60).reshape(5, 3, 4)
+    s = a.tostring()
+    aa = np.fromstring(s, dtype=int)  # shape被丢失
+    # [ 0  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+    # 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47
+    # 48 49 50 51 52 53 54 55 56 57 58 59]
+    print(aa)
+
     img = cv2.imread('data/laska.png')
     img_str = cv2.imencode('.jpg', img)[1].tostring()  # 将图片格式转换(编码)成流数据，放到内存缓存中，然后转化成string格式
     b64_code = base64.b64encode(img_str)
@@ -126,8 +148,22 @@ def numpy_arr_to_string():
     print(arr)
 
 
+def test_pickle():
+    a = np.arange(393216).reshape(256, 512, 3).astype(np.uint8)
+    time_1 = time.time()
+    s = pickle.dumps(a)
+    time_2 = time.time()
+    aa = pickle.loads(s)
+    time_3 = time.time()
+    print("dumps cost time:{}, load cost time:{}".format(time_2 - time_1, time_3 - time_2))
+    print(aa.shape)
+    print(aa)
+
+
 if __name__ == '__main__':
     # test_base64()
-    test_base64_pillow()
-    opencv_img_to_string()
-    numpy_arr_to_string()
+    # test_base64_pillow()
+    # test_base64_pillow_1()
+    # opencv_img_to_string()
+    # numpy_arr_to_string()
+    test_pickle()

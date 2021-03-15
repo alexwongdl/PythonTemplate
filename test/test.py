@@ -151,3 +151,5 @@ if __name__=="__main__":
     if 'a' in dict_a.keys():
         print('dict_a[a]:{}'.format(dict_a['a']))
     # load_imgs()
+    import socket
+    print(socket._GLOBAL_DEFAULT_TIMEOUT)
