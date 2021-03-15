@@ -149,7 +149,7 @@ def numpy_arr_to_string():
 
 
 def test_pickle():
-    a = np.arange(393216).reshape(256, 512, 3).astype(np.uint8)
+    a = np.arange(786432).reshape(2, 256, 512, 3).astype(np.uint8)
     time_1 = time.time()
     s = pickle.dumps(a)
     time_2 = time.time()
