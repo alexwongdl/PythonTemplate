@@ -149,9 +149,17 @@ def numpy_arr_to_string():
 
 
 def test_pickle():
-    a = np.arange(786432).reshape(2, 256, 512, 3).astype(np.uint8)
+    a = np.arange(7864320).reshape(20, 256, 512, 3).astype(np.uint8)
     time_1 = time.time()
     s = pickle.dumps(a)
+    np_arr = np.array([[255, 128], [89, 12]], dtype=np.uint8)
+    print(pickle.dumps(np_arr))
+    print(np_arr.tostring())
+    print(np_arr.tobytes())
+
+    base64_arr = base64.urlsafe_b64encode(np_arr)
+    print(base64_arr)
+    print(np.fromstring(base64.urlsafe_b64decode(base64_arr), dtype=np.uint8))
     time_2 = time.time()
     aa = pickle.loads(s)
     time_3 = time.time()

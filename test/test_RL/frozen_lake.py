@@ -87,6 +87,7 @@ def compute_policy_v(env, policy, gamma=1.0):
         prev_v = np.copy(v)
         for s in range(env.env.nS):
             policy_a = policy[s]
+            print("state:{}, policy_a:{}, trans:{}".format(s, policy_a, env.env.P[s][policy_a]))
             v[s] = sum([p * (r + gamma * prev_v[s_]) for p, s_, r, _ in env.env.P[s][policy_a]])
         if np.sum((np.fabs(prev_v - v))) <= eps:
             # value converged
@@ -156,9 +157,18 @@ def fronzenlake_value_iteration():
 
 
 def frozen_lake_test():
+    """
+        def step(self, action):Accepts an action and returns a tuple (observation, reward, done, info)
+        reset: 重置环境
+        render: render其实就相当于一个渲染的引擎, 没有render, 也是可以运行的. 但是render可以为了便于直观显示当前环境中物体的状态, 也是为了便于我们进行代码的调试. 不然只看着一堆数字的observation, 我们也是不知道实际情况怎么样了.
+        close:
+        seed: 环境随机数字生成器的seed
+    :return:
+    """
     env_name = 'FrozenLake-v0'  # 'FrozenLake8x8-v0'
     env = gym.make(env_name)
     print(env.env.P)
+    print(env.env.nS)
 
     for state in env.env.P:
         print(state, env.env.P[state])
