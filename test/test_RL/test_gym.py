@@ -4,6 +4,7 @@
  @Email: alex.wj@alibaba-inc.com
 
  openAI： https://openai.com/
+ gym: https://gym.openai.com/
 """
 import gym
 from gym import spaces

@@ -501,7 +501,7 @@ def list_all_stock():
     # 目前深证最大号为002725，获取上交所创业板请修改相应最大号码
 
     stock_id_list = [i for i in range(1, 2736)]  # 1-2725 深A
-    stock_id_list.extend([i for i in range(300000, 300410)])  # 300000 - 300409 创
+    # stock_id_list.extend([i for i in range(300000, 300410)])  # 300000 - 300409 创
     stock_id_list.extend([i for i in range(600000, 603999)])  # 600000 - 603998 沪A
     print(stock_id_list)
 
@@ -534,6 +534,8 @@ if __name__ == '__main__':
 
     # 遍历所有股票
     # list_all_stock()
+
+
     stock_info = StockInfo()
     # stock_info.test(1, "平安银行")
     # stock_info.test(600507, "方大特刚")

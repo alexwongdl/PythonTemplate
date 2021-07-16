@@ -45,6 +45,7 @@ def test_npz():
     print('str_a:{}'.format(data['str_a']))
     print('dict_a:{}'.format(data['dict_a']))
 
+
 def test_tostring_fromstring():
     """
 
@@ -57,8 +58,29 @@ def test_tostring_fromstring():
     print(arr_rec)
 
 
+def test_chunk():
+    """
+    10 : (5, 256, 256, 3)
+        (5, 256, 256, 3)
+    9: (5, 256, 256, 3)
+        (4, 256, 256, 3)
+    4: (4, 256, 256, 3)
+    2: (2, 256, 256, 3)
+    6: (5, 256, 256, 3)
+        (1, 256, 256, 3)
+    :return:
+    """
+    arr = np.random.random((6, 256, 256, 3))
+
+    chunk_size = 5
+    chunks = [arr[i:i + chunk_size, :, :, :] for i in range(0, arr.shape[0], chunk_size)]
+    for chunk in chunks:
+        print(chunk.shape)
+
+
 if __name__ == '__main__':
-    test_numpy_array()
-    test_broadcast()
+    # test_numpy_array()
+    # test_broadcast()
     # test_npz()
-    test_tostring_fromstring()
+    # test_tostring_fromstring()
+    test_chunk()
