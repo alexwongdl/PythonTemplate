@@ -172,6 +172,6 @@ if __name__ == '__main__':
     # test_base64()
     # test_base64_pillow()
     # test_base64_pillow_1()
-    # opencv_img_to_string()
+    opencv_img_to_string()
     # numpy_arr_to_string()
-    test_pickle()
+    # test_pickle()
