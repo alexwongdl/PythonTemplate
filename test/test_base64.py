@@ -50,6 +50,7 @@ def test_decode():
     # encode
     image_org = cv2.imread("data/laska.png")
     img_str = cv2.imencode('.png', image_org)[1].tostring()
+    # img_str = cv2.imencode('.jpg', image_org)[1].tostring()
     print(image_org.shape)
     frame_str = base64.urlsafe_b64encode(img_str)
 
@@ -99,8 +100,23 @@ def test_base64_pillow_1():
     img = Image.open(BytesIO(base64.urlsafe_b64decode(encoded_string)))
     print(img.size)
     img.show()
+    # cv2.imshow("img", img)
     # time.sleep(30)
     img.save("data/laska_pil.png")
+
+
+def test_base64_pillow_2():
+    img = cv2.imread('data/laska.png')
+    pil_img = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+
+    buffer = BytesIO()  # buffer = cStringIO.StringIO() for python2
+    pil_img.save(buffer, format="JPEG", quality=100)
+    b64code = base64.urlsafe_b64encode(buffer.getvalue())
+
+    img = Image.open(BytesIO(base64.urlsafe_b64decode(b64code)))
+    print(img.size)
+    img.show()
+    img.save("data/laska_pil2.png")
 
 
 def opencv_img_to_string():
@@ -172,6 +188,7 @@ if __name__ == '__main__':
     # test_base64()
     # test_base64_pillow()
     # test_base64_pillow_1()
-    opencv_img_to_string()
+    test_base64_pillow_2()
+    # opencv_img_to_string()
     # numpy_arr_to_string()
     # test_pickle()

@@ -21,6 +21,15 @@ def test_findAll():
     print(result)  # ['Alex', 'Alex']
 
 
+def test_finditer():
+    string = "aAlex9991111Alex991212"
+    pattern = r'(Al[a-z]*)[0-9]*'
+    result = re.finditer(pattern, string)
+    print(result)  # <callable_iterator object at 0x7fe3f04c0550>
+    print(next(result).group())  # Alex9991111
+    print(next(result).group(1))  # Alex
+
+
 def test_match():
     string = "Alex9991111Alex991212"
     pattern = r'(Alex[0-9]*)'
@@ -37,4 +46,5 @@ def test_match():
 
 if __name__ == '__main__':
     # test_match()
-    test_findAll()
+    # test_findAll()
+    test_finditer()

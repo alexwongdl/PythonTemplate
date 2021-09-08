@@ -92,7 +92,7 @@ class StockInfo:
         #     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.67 Safari/537.36"}
         req = request.Request(url, headers=headers)
         try:
-            content = request.urlopen(req, timeout=30).read()
+            content = request.urlopen(req, timeout=5).read()
             return content
         except Exception as e:
             traceback.print_exc()
@@ -489,23 +489,23 @@ def list_all_stock():
 
     wb = xlwt.Workbook()
     ws = wb.add_sheet(u'stock')
-    ws.write(1, 0, u'股票代码')
-    ws.write(1, 1, u'股票名称')
-    ws.write(1, 2, u'股票板块')
-    ws.write(1, 3, u'id')
+    ws.write(0, 0, u'股票代码')
+    ws.write(0, 1, u'股票名称')
+    ws.write(0, 2, u'股票板块')
+    ws.write(0, 3, u'id')
     ws2 = wb.add_sheet(u'industry')
-    ws2.write(1, 0, u'股票板块')
+    ws2.write(0, 0, u'股票板块')
     ws2.write(0, 1, u'统计时间')
 
     gs = getstock()
     # 目前深证最大号为002725，获取上交所创业板请修改相应最大号码
 
-    stock_id_list = [i for i in range(1, 2736)]  # 1-2725 深A
-    # stock_id_list.extend([i for i in range(300000, 300410)])  # 300000 - 300409 创
+    stock_id_list = [i for i in range(1, 3043)]  # 1-2725 深A
+    # stock_id_list.extend([i for i in range(300000, 301063)])  # 300000 - 300409 创
     stock_id_list.extend([i for i in range(600000, 603999)])  # 600000 - 603998 沪A
     print(stock_id_list)
 
-    excel_line_num = 2
+    excel_line_num = 1
     for stock_id in stock_id_list:
         try:
             ret = gs.go(stock_id, excel_line_num, ws)
@@ -533,10 +533,10 @@ if __name__ == '__main__':
     # print(m.group())
 
     # 遍历所有股票
-    # list_all_stock()
+    list_all_stock()
 
 
-    stock_info = StockInfo()
+    # stock_info = StockInfo()
     # stock_info.test(1, "平安银行")
     # stock_info.test(600507, "方大特刚")
-    stock_info.get_all_shebao_stock(write_index=3)
+    # stock_info.get_all_shebao_stock(write_index=3)
