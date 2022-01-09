@@ -697,13 +697,85 @@ def testFindKthLargest():
     print(findKthLargest([3, 2, 3, 1, 2, 4, 5, 5, 6], 4))
 
 
+"""
+*****最长连续序列
+
+给定一个未排序的整数数组 nums ，找出数字连续的最长序列（不要求序列元素在原数组中连续）的长度。
+请你设计并实现时间复杂度为 O(n) 的算法解决此问题。
+
+示例 1：
+
+输入：nums = [100,4,200,1,3,2]
+输出：4
+解释：最长数字连续序列是 [1, 2, 3, 4]。它的长度为 4。
+示例 2：
+
+输入：nums = [0,3,7,2,5,8,4,6,0,1]
+输出：9
+
+提示：
+    0 <= nums.length <= 105
+    -109 <= nums[i] <= 109
+    
+思路：
+    使用个map来保存相邻数据信息，每个数x只需要查询 x-1和x+1
+    注意[[0, 1], [3, 2, 4, 1], [7, 8, 6], [5, 4, 6]] 一个数的左右邻居已经处理过了，需要把左右邻居的list合并
+"""
+
+
+def longest_consecutive(nums):
+    """
+    :type nums: List[int]
+    :rtype: int
+    """
+    list_array = []
+    current_index = 0
+
+    nums_map = {}
+
+    for num in nums:
+        if num in nums_map:  # 重复的数据
+            continue
+
+        left = num - 1
+        right = num + 1
+
+        if left in nums_map and right in nums_map:  # 左右邻居都在nums_map里了, 合并左右邻居
+            nums_map[num] = nums_map[right]
+            list_array[nums_map[num]].add(num)
+            list_array[nums_map[num]] = list_array[nums_map[num]].union(list_array[nums_map[left]])
+            for item_left in list_array[nums_map[left]]:
+                nums_map[item_left] = nums_map[right]
+
+        elif left in nums_map:
+            nums_map[num] = nums_map[left]
+            list_array[nums_map[num]].add(num)
+        elif right in nums_map:
+            nums_map[num] = nums_map[right]
+            list_array[nums_map[num]].add(num)
+        else:  # 没有邻居在nums_map里
+            list_array.append(set([num]))
+            nums_map[num] = current_index
+            current_index += 1
+
+        print(list_array)
+
+    max_len = 0
+    for list_tmp in list_array:
+        max_len = max(max_len, len(list_tmp))
+    return max_len
+
+
+def test_longest_consecutive():
+    print(longest_consecutive([100, 4, 200, 1, 3, 2]))
+    print(longest_consecutive([0, 3, 7, 2, 5, 8, 4, 6, 0, 1]))
+
+
 if __name__ == '__main__':
     # test_three_sum()
     # testMaxAreaOfIsland()
-    # a = {}
-    # a[(0,0)] = (0, 0)
-    # print(a)
     # test_search()
 
     # test_findLengthOfLCIS()
-    testFindKthLargest()
+    # testFindKthLargest()
+    test_longest_consecutive()

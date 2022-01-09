@@ -533,10 +533,10 @@ if __name__ == '__main__':
     # print(m.group())
 
     # 遍历所有股票
-    list_all_stock()
+    # list_all_stock()
 
 
-    # stock_info = StockInfo()
+    stock_info = StockInfo()
     # stock_info.test(1, "平安银行")
     # stock_info.test(600507, "方大特刚")
-    # stock_info.get_all_shebao_stock(write_index=3)
+    stock_info.get_all_shebao_stock(write_index=3)
