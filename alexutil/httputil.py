@@ -10,6 +10,8 @@ import json
 import logging
 import urllib.request
 import traceback
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 from PIL import Image
 
@@ -145,6 +147,29 @@ def download_video(video_url, save_path):
     :return:
     """
     urllib.request.urlretrieve(video_url, save_path)
+
+
+def http_get_with_retry(url, retry_time=3):
+    """
+    curl url + 重试机制
+    :param url:
+    :param retry_time:
+    :return:
+    """
+    retry_strategy = Retry(
+        total=retry_time,
+        status_forcelist=[429, 500, 502, 503, 504],
+        method_whitelist=["HEAD", "GET", "OPTIONS"]
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    http = requests.Session()
+    http.mount("https://", adapter)
+    http.mount("http://", adapter)
+
+    responses = http.get(url, timeout=0.5)
+    # responses = requests.get(url, timeout=0.5)
+    print(responses.status_code, responses.content)
+    return responses
 
 
 if __name__ == "__main__":
