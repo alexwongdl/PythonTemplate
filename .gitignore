@@ -14,3 +14,5 @@ MANIFEST
 shape_predictor_68_face_landmarks.dat
 dlib_face_recognition_resnet_model_v1.dat
 test/test.npz
+test/test_RL/logs/*
+test/test_RL/*.zip
