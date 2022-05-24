@@ -771,6 +771,112 @@ def test_longest_consecutive():
     print(longest_consecutive([0, 3, 7, 2, 5, 8, 4, 6, 0, 1]))
 
 
+"""
+排列序列
+给出集合 [1,2,3,...,n]，其所有元素共有 n! 种排列。
+
+按大小顺序列出所有排列情况，并一一标记，当 n = 3 时, 所有排列如下：
+
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+给定 n 和 k，返回第 k 个排列。
+
+示例 1：
+输入：n = 3, k = 3
+输出："213"
+
+示例 2：
+输入：n = 4, k = 9
+输出："2314"
+
+示例 3：
+输入：n = 3, k = 1
+输出："123"
+ 
+提示：
+1 <= n <= 9
+1 <= k <= n!
+
+思路：每次确定第一个元素的值，例如第一个元素是2，那么以2开头的序列数量是 2* A_{n-1}^{n-1}
+"""
+
+
+def cal_ann(n):
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
+
+
+def getPermutation(n: int, k: int) -> str:
+    if n == 1:
+        return "1"
+    n_list = list(range(1, n + 1))
+    n_ann = {}
+    for i in range(1, n + 1):
+        n_ann[i] = cal_ann(i)
+
+    result = get_perm_iter(n_list, k, n_ann)
+    print("n:{}, k:{}, result:{}".format(n, k, result))
+    return result
+
+
+def get_perm_iter(n_list, k, n_ann):
+    """
+    每次都先确定第一个元素是什么
+    :param n_list:
+    :param k:
+    :param n_ann:
+    :return:
+    """
+    print("get_perm_iter, n_list:{}, k:{}, n_ann:{}".format(n_list, k, n_ann))
+    n = len(n_list)
+    # n-1 个元素的排列组合
+    n_1_sort = n_ann[n - 1]
+
+    for i in range(n):
+        # 第1个元素排在第1，包含的元素个数是 n-1 个元素的排列组合
+        # 第2个元素排在第1，包含的元素个数是 n-1 * 2 个元素的排列组合
+        # 第3个元素排在第1，包含的元素个数是 n-1 * 3 个元素的排列组合
+        before_with = n_1_sort * (i + 1)
+        before = n_1_sort * i
+
+        if before_with == k:
+            # 把第i个元素放到第一位，其他的元素倒序排列
+            new_list = [n_list[i]]
+            for j in range(n - 1, -1, -1):
+                if j != i:
+                    new_list.append(n_list[j])
+
+            print("new_list:{}".format(new_list))
+            return new_list
+
+        elif before_with > k:
+            # 进入下一个递归
+            new_list = [n_list[i]]
+
+            new_n_list = []
+            for j in range(n):
+                if j != i:
+                    new_n_list.append(n_list[j])
+            new_list.extend(get_perm_iter(new_n_list, k - before, n_ann))
+            return new_list
+
+        elif before_with < k:
+            continue
+
+
+def test_get_premutation():
+    result = getPermutation(3, 3)
+    result = getPermutation(4, 9)
+    result = getPermutation(3, 1)
+    result = getPermutation(1, 1)
+
+
 if __name__ == '__main__':
     # test_three_sum()
     # testMaxAreaOfIsland()
@@ -778,4 +884,5 @@ if __name__ == '__main__':
 
     # test_findLengthOfLCIS()
     # testFindKthLargest()
-    test_longest_consecutive()
+    # test_longest_consecutive()
+    test_get_premutation()

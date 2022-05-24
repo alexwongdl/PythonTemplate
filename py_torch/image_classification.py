@@ -10,6 +10,7 @@ torchvision图像分类：[https://pytorch.org/tutorials/beginner/finetuning_tor
 import os
 import time
 from sklearn.metrics import confusion_matrix
+import tqdm
 import random
 
 from matplotlib import font_manager
@@ -91,7 +92,9 @@ def train(net, train_iter, test_iter, criterion, optimizer, scheduler_warmup, nu
         start = time.time()
         net.train()  # 训练模式
         train_loss_sum, train_acc_sum, n, batch_count = 0.0, 0.0, 0, 0
-        for X, y in train_iter:
+        # for X, y in train_iter:
+        for i, data in enumerate(tqdm.tqdm(train_iter)):
+            X, y = data
             X, y = X.to(device), y.to(device)
             optimizer.zero_grad()  # 梯度清零
             y_hat = net(X)
