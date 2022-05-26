@@ -550,7 +550,7 @@ def search(nums, target):
             pivot_index = int((start_index + end_index) / 2)
 
         if start_num < pivot_num:  # pivor定位到了 未旋转的数据上
-            if start_num <= target <= pivot_num:  # 目标在为旋转数据上
+            if start_num <= target <= pivot_num:  # 目标在未旋转数据上
                 end_index = pivot_index
             else:
                 start_index = pivot_index
@@ -714,8 +714,8 @@ def testFindKthLargest():
 输出：9
 
 提示：
-    0 <= nums.length <= 105
-    -109 <= nums[i] <= 109
+    0 <= nums.length <= 10^5
+    -10^9 <= nums[i] <= 10^9
     
 思路：
     使用个map来保存相邻数据信息，每个数x只需要查询 x-1和x+1
@@ -877,6 +877,202 @@ def test_get_premutation():
     result = getPermutation(1, 1)
 
 
+"""
+*****省份数量
+
+有 n 个城市，其中一些彼此相连，另一些没有相连。如果城市 a 与城市 b 直接相连，且城市 b 与城市 c 直接相连，那么城市 a 与城市 c 间接相连。
+省份 是一组直接或间接相连的城市，组内不含其他没有相连的城市。
+给你一个 n x n 的矩阵 isConnected ，其中 isConnected[i][j] = 1 表示第 i 个城市和第 j 个城市直接相连，而 isConnected[i][j] = 0 表示二者不直接相连。
+返回矩阵中 省份 的数量。
+
+示例 1：
+输入：isConnected = [[1,1,0],[1,1,0],[0,0,1]]
+输出：2
+
+示例 2：
+输入：isConnected = [[1,0,0],[0,1,0],[0,0,1]]
+输出：3
+
+提示：
+    1 <= n <= 200
+    n == isConnected.length
+    n == isConnected[i].length
+    isConnected[i][j] 为 1 或 0
+    isConnected[i][i] == 1
+    isConnected[i][j] == isConnected[j][i]
+    
+思路：
+    DFS遍历
+   与《岛屿的最大面积》问题类似
+   额外维护一个长度为n的向量来标注各个城市属于第几个省
+"""
+import queue
+
+
+def findCircleNum(isConnected: list[list[int]]) -> int:
+    n = len(isConnected)
+    city_tag = [0 for _ in range(n)]
+    current_tag = 1
+    for i in range(n):
+        all_zeros = True
+        if city_tag[i] > 0:
+            continue
+        city_tag[i] = current_tag
+
+        for j in range(i + 1, n):
+            if city_tag[j] > 0:
+                continue
+
+            if isConnected[i][j] == 1:
+                all_zeros = False
+                q = queue.Queue()
+                # DFS
+                city_tag[j] = current_tag
+                q.put(i)
+                q.put(j)
+
+                while not q.empty():
+                    k = q.get()
+                    for tmp in range(n):
+                        if city_tag[tmp] > 0 or k == tmp:
+                            continue
+                        if isConnected[k][tmp] == 1:
+                            city_tag[tmp] = current_tag
+                            q.put(tmp)
+                current_tag += 1
+        if all_zeros:
+            current_tag += 1
+
+    print(city_tag)
+    print(current_tag - 1)
+    return current_tag - 1
+
+
+def test_find_circle_num():
+    isConnected = [[1, 1, 0], [1, 1, 0], [0, 0, 1]]
+    findCircleNum(isConnected)
+
+    isConnected = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
+    findCircleNum(isConnected)
+
+    isConnected = [[1, 0, 0, 1],
+                   [0, 1, 1, 0],
+                   [0, 1, 1, 1],
+                   [1, 0, 1, 1]]
+    findCircleNum(isConnected)
+
+
+"""
+**合并区间
+
+以数组 intervals 表示若干个区间的集合，其中单个区间为 intervals[i] = [starti, endi] 。请你合并所有重叠的区间，并返回 一个不重叠的区间数组，该数组需恰好覆盖输入中的所有区间 。
+示例 1：
+输入：intervals = [[1,3],[2,6],[8,10],[15,18]]
+输出：[[1,6],[8,10],[15,18]]
+解释：区间 [1,3] 和 [2,6] 重叠, 将它们合并为 [1,6].
+
+示例 2：
+输入：intervals = [[1,4],[4,5]]
+输出：[[1,5]]
+解释：区间 [1,4] 和 [4,5] 可被视为重叠区间。
+
+提示：
+1 <= intervals.length <= 10^4
+intervals[i].length == 2
+0 <= starti <= endi <= 10^4
+    
+思路：
+   先按照start值排序，然后逐个进行合并
+"""
+
+
+def merge(intervals: list[list[int]]) -> list[list[int]]:
+    intervals = sorted(intervals, key=lambda x: x[0])
+
+    start_index = 0
+    while True:
+        if start_index == len(intervals) - 1:
+            break
+        cur_item = intervals[start_index]
+        next_item = intervals[start_index + 1]
+        if cur_item[1] >= next_item[0]:  # overlap
+            cur_item[1] = max(cur_item[1], next_item[1])
+            intervals[start_index] = cur_item
+            intervals.pop(start_index + 1)
+        else:
+            start_index += 1
+    print(intervals)
+    return intervals
+
+
+def test_merge():
+    intervals = [[1, 3], [2, 6], [8, 10], [15, 18]]
+    merge(intervals)
+
+    intervals = [[1, 4], [4, 5]]
+    merge(intervals)
+
+
+"""
+*****接雨水
+给定 n 个非负整数表示每个宽度为 1 的柱子的高度图，计算按此排列的柱子，下雨之后能接多少雨水。
+输入：height = [0,1,0,2,1,0,1,3,2,1,2,1]
+输出：6
+
+输入：height = [4,2,0,3,2,5]
+输出：9
+"""
+
+
+def trap(height: list[int]) -> int:
+    water_list = [0 for _ in range(len(height))]
+    left_max_height, right_max_height = 0, 0
+    left_point, right_point = 0, len(height) - 1
+
+    while True:
+        print(left_point, right_point)
+        left_height = height[left_point]
+        right_height = height[right_point]
+
+        if left_height >= left_max_height:
+            water_list[left_point] = 0
+            left_max_height = left_height
+            left_point += 1
+        else:
+            # right_max_height > left_max_height > left_height 右边比左边高，当前高度与左边求差值
+            if right_max_height >= left_max_height:
+                water_list[left_point] = left_max_height - left_height
+                left_point += 1
+            # else: left_max_height > right_max_height   left_height < left_max_height
+
+        if right_height >= right_max_height:
+            water_list[right_point] = 0
+            right_max_height = right_height
+            right_point -= 1
+        else:
+            if left_max_height >= right_max_height:
+                water_list[right_point] = right_max_height - right_height
+                right_point -= 1
+            # else: right_max_height > left_max_height   right_height
+
+        if left_point == right_point:
+            cur_height = height[left_point]
+            water_list[left_point] = min(0, min(left_max_height, right_max_height) - cur_height)
+
+        if left_point > right_point:
+            break
+    # print(water_list)
+    # print(sum(water_list))
+    return sum(water_list)
+
+
+def test_trap():
+    height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+    trap(height)
+    height = [4, 2, 0, 3, 2, 5]
+    trap(height)
+
+
 if __name__ == '__main__':
     # test_three_sum()
     # testMaxAreaOfIsland()
@@ -885,4 +1081,7 @@ if __name__ == '__main__':
     # test_findLengthOfLCIS()
     # testFindKthLargest()
     # test_longest_consecutive()
-    test_get_premutation()
+    # test_get_premutation()
+    # test_find_circle_num()
+    # test_merge()
+    test_trap()
