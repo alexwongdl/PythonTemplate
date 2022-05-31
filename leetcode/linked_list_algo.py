@@ -5,6 +5,13 @@
 """
 
 
+class TreeNode:
+    def __init__(self, x):
+        self.val = x
+        self.left = None
+        self.right = None
+
+
 def print_nodes(head):
     list_a = [head.val]
     cur_node = head.next
@@ -197,23 +204,95 @@ def test_sort_list():
 
 class CircleLinkSolution:
     def detectCycle(self, head: ListNode) -> ListNode:
-        pass
+        if not head:
+            return None
+
+        meet_time = 0
+        meet_1_1 = 0
+        meet_1_2 = 0
+
+        meet_2_1 = 0
+        meet_2_2 = 0
+
+        step_1_head = head
+        step_2_head = head
+        head_1_step_count = 0
+        head_2_step_count = 0
+
+        while step_1_head:
+            # 1 step
+            step_1_head = step_1_head.next
+            head_1_step_count += 1
+
+            if step_1_head == head:  # first node is in circle
+                return head
+
+            # 2 step
+            if not step_2_head:
+                return None
+            step_2_head = step_2_head.next
+            if not step_2_head:
+                return None
+            step_2_head = step_2_head.next
+            head_2_step_count += 2
+
+            if step_1_head == step_2_head:
+                meet_time += 1
+                if meet_time == 1:
+                    meet_1_1 = head_1_step_count
+                    meet_1_2 = head_2_step_count
+                elif meet_time == 2:
+                    meet_2_1 = head_1_step_count
+                    meet_2_2 = head_2_step_count
+                    break
+
+        if meet_1_1 == 0:
+            return None
+
+        circle_node_count = meet_2_1 - meet_1_1  # 圆里的节点个数
+        print(meet_2_1, meet_1_1, circle_node_count)
+
+        head_1 = head
+        head_2 = head
+
+        for i in range(circle_node_count):
+            head_2 = head_2.next
+
+        while True:
+            head_1 = head_1.next
+            head_2 = head_2.next
+            if head_1 == head_2:
+                return head_1
 
 
 def test_circle_link():
-    list_a = [3, 2, 0, -4]
-    head = ListNode(3, None)
-    cur_node = head
+    # list_a = [3, 2, 0, -4]
+    # head = ListNode(3, None)
+    # cur_node = head
+    #
+    # for i in range(1, len(list_a)):
+    #     new_node = ListNode(list_a[i], None)
+    #     cur_node.next = new_node
+    #     cur_node = cur_node.next
+    #     if i == 1:
+    #         circle_node = cur_node
+    #     if i == 3:
+    #         cur_node.next = circle_node
 
+    list_a = [-1, -7, 7, -4, 19, 6, -9, -5, -2, -5]
+    head = ListNode(-1, None)
+    cur_node = head
     for i in range(1, len(list_a)):
         new_node = ListNode(list_a[i], None)
         cur_node.next = new_node
         cur_node = cur_node.next
-        if i == 1:
+        if i == 6:
             circle_node = cur_node
-        if i == 3:
+        if i == 9:
             cur_node.next = circle_node
 
+    circlr_link_solution = CircleLinkSolution()
+    print(circlr_link_solution.detectCycle(head))
     # print_nodes(head)
 
 
