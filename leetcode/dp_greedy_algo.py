@@ -562,19 +562,19 @@ def minimumTotal(triangle: list[list[int]]) -> int:
 
         else:
             cur_mem = []
-            prev_mem = min_memory[i-1]
+            prev_mem = min_memory[i - 1]
             len_men = len(prev_mem)
 
             cur_arr = triangle[i]
             for k in range(len(cur_arr)):
                 cur_item = cur_arr[k]
                 # 看 k-1 和k 两个menory
-                if k-1 < 0:
+                if k - 1 < 0:
                     cur_mem.append(prev_mem[k] + cur_item)
                 elif k > len_men - 1:
-                    cur_mem.append(prev_mem[k-1] + cur_item)
+                    cur_mem.append(prev_mem[k - 1] + cur_item)
                 else:
-                    cur_mem.append(min(prev_mem[k] + cur_item, prev_mem[k-1] + cur_item))
+                    cur_mem.append(min(prev_mem[k] + cur_item, prev_mem[k - 1] + cur_item))
             min_memory.append(cur_mem)
 
     print(min(min_memory[-1]))
@@ -586,10 +586,75 @@ def test_minimum_total():
     minimumTotal(triangle)
 
 
+"""
+一次编辑
+字符串有三种编辑操作:插入一个英文字符、删除一个英文字符或者替换一个英文字符。 给定两个字符串，编写一个函数判定它们是否只需要一次(或者零次)编辑。
+
+思路：动态规划
+编辑距离的简化版本，动态规划计算编辑距离  
+    f(i, j) = min{
+                   f(i-1, j-1) + I(i, j),
+                   f(i-1, j) + 1,
+                   f(i, j-1) +1
+                  }
+"""
+import math
+import numpy as np
+
+
+def oneEditAway(first: str, second: str) -> bool:
+    m = len(first)
+    n = len(second)
+    if math.fabs(m - n) >= 2:  # 字符串长度不能超过2
+        return False
+    if len(first) <= 1 and len(second) <= 1:
+        return True
+
+    memory = np.zeros(shape=(m, n), dtype=np.int32)
+    for i in range(m):
+        if first[i] == second[0]:
+            memory[i, 0] = memory[i - 1, 0]  # 注意第一行第一列的初始化
+        else:
+            memory[i, 0] = memory[i - 1, 0] + 1
+
+    for i in range(n):
+        if first[0] == second[i]:
+            memory[0, i] = memory[0, i - 1]
+        else:
+            memory[0, i] = memory[0, i - 1] + 1
+
+    for i in range(1, m):
+        for j in range(1, n):
+            if first[i] == second[j]:
+                memory[i, j] = min(memory[i - 1, j - 1], memory[i - 1, j] + 1, memory[i, j - 1] + 1)
+            else:
+                memory[i, j] = min(memory[i - 1, j - 1] + 1, memory[i - 1, j] + 1, memory[i, j - 1] + 1)
+    print(memory)
+    if memory[-1, -1] <= 1:
+        return True
+    else:
+        return False
+
+
+def test_one_edit_away():
+    first = "pale"
+    second = "ple"
+    oneEditAway(first, second)
+
+    first = "ab"
+    second = "bc"
+    oneEditAway(first, second)
+
+    first = "a"
+    second = "ab"
+    oneEditAway(first, second)
+
+
 if __name__ == '__main__':
     # test_envelopes()
     # test_max_profit()
     # test_max_profit2()
     # test_maximal_square()
     # test_max_sub_array()
-    test_minimum_total()
+    # test_minimum_total()
+    test_one_edit_away()

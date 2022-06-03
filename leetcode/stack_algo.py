@@ -53,37 +53,63 @@ def test_cqueue():
     queue.deleteHead()
     queue.deleteHead()
 
-"""
-***** 最小栈
-设计一个支持 push ，pop ，top 操作，并能在常数时间内检索到最小元素的栈。
 
-实现 MinStack 类:
-
-MinStack() 初始化堆栈对象。
-void push(int val) 将元素val推入堆栈。
-void pop() 删除堆栈顶部的元素。
-int top() 获取堆栈顶部的元素。
-int getMin() 获取堆栈中的最小元素。
 """
+*****  包含min函数的栈
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+解题思路：
+我们只需要设计一个数据结构，使得每个元素 a 与其相应的最小值 m 时刻
+保持一一对应。因此我们可以使用一个辅助栈，与元素栈同步插入与删除，用于存储与每个元素对应的
+最小值。
+"""
+
+
 class MinStack:
 
     def __init__(self):
-
+        self.stack = []
+        self.min_stack = []
+        self.top_val = None
 
     def push(self, val: int) -> None:
+        if len(self.stack) <= 0:
+            self.stack.append(val)
+            self.min_stack.append(val)
+            self.top_val = val
+        else:
+            self.stack.append(val)
+            cur_min = self.min_stack[-1]
+            if val < cur_min:
+                self.min_stack.append(val)
+            else:
+                self.min_stack.append(cur_min)
 
+        return None
 
     def pop(self) -> None:
-
+        self.stack.pop()
+        self.min_stack.pop()
+        return None
 
     def top(self) -> int:
+        return self.stack[-1]
 
+    def min(self) -> int:
+        return self.min_stack[-1]
 
-    def getMin(self) -> int:
 
 def test_min_stack():
-    
+    min_stack = MinStack()
+    min_stack.push(-2)
+    min_stack.push(0)
+    min_stack.push(-3)
+    print(min_stack.min())  # --> 返回 -3.
+    min_stack.pop()
+    print(min_stack.top())  # --> 返回 0.
+    print(min_stack.min())  # --> 返回 -2.
 
 
 if __name__ == '__main__':
     # test_cqueue()
+    test_min_stack()

@@ -1073,6 +1073,107 @@ def test_trap():
     trap(height)
 
 
+"""
+****** 旋转图像
+给定一个 n × n 的二维矩阵 matrix 表示一个图像。请你将图像顺时针旋转 90 度。
+你必须在 原地 旋转图像，这意味着你需要直接修改输入的二维矩阵。请不要 使用另一个矩阵来旋转图像。
+输入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+输出：[[7,4,1],[8,5,2],[9,6,3]]
+
+解题思路：
+      从外到里一圈一圈的进行变换。
+      每一层都只变换最上面的数据
+"""
+
+import numpy as np
+
+
+def rotate(matrix: list[list[int]]) -> None:
+    """
+    Do not return anything, modify matrix in-place instead.
+    """
+    width = len(matrix)
+    if width <= 1:
+        return None
+
+    for layer in range(width // 2):
+        # 第layer层，变换[layer, width - layer]的数
+        for i in range(layer, width - layer - 1):
+            # 四角变换
+            a = matrix[layer][i]
+            b = matrix[i][width - layer - 1]
+            c = matrix[width - layer - 1][width - 1 - i]
+            d = matrix[width - 1 - i][layer]
+
+            # print(a, b, c, d)
+
+            matrix[layer][i] = d
+            matrix[i][width - layer - 1] = a
+            matrix[width - layer - 1][width - 1 - i] = b
+            matrix[width - 1 - i][layer] = c
+
+        # print(np.array(matrix))
+
+
+def test_rotate():
+    matrix = [[1, 2, 3],
+              [4, 5, 6],
+              [7, 8, 9]]
+    rotate(matrix)
+
+    matrix = [[5, 1, 9, 11],
+              [2, 4, 8, 10],
+              [13, 3, 6, 7],
+              [15, 14, 12, 16]]
+    rotate(matrix)
+
+
+def setZeroes(matrix: list[list[int]]) -> None:
+    """
+    Do not return anything, modify matrix in-place instead.
+    """
+    clean_row = set()
+    clean_cols = set()
+
+    rows = len(matrix)
+    if len(matrix) <= 0:
+        return None
+
+    cols = len(matrix[0])
+
+    for i in range(rows):
+        for j in range(cols):
+            if matrix[i][j] == 0:
+                clean_row.add(i)
+                clean_cols.add(j)
+
+    for i in clean_row:
+        for j in range(cols):
+            matrix[i][j] = 0
+
+    for j in clean_cols:
+        for i in range(rows):
+            matrix[i][j] = 0
+
+    print(np.array(matrix))
+
+
+def test_set_zeros():
+    matrix = [
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 1, 1]
+    ]
+    setZeroes(matrix)
+
+    matrix = [
+        [0, 1, 2, 0],
+        [3, 4, 5, 2],
+        [1, 3, 1, 5]
+    ]
+    setZeroes(matrix)
+
+
 if __name__ == '__main__':
     # test_three_sum()
     # testMaxAreaOfIsland()
@@ -1084,4 +1185,6 @@ if __name__ == '__main__':
     # test_get_premutation()
     # test_find_circle_num()
     # test_merge()
-    test_trap()
+    # test_trap()
+    # test_rotate()
+    test_set_zeros()
