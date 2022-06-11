@@ -5,13 +5,6 @@
 """
 
 
-class TreeNode:
-    def __init__(self, x):
-        self.val = x
-        self.left = None
-        self.right = None
-
-
 def print_nodes(head):
     list_a = [head.val]
     cur_node = head.next
