@@ -650,6 +650,434 @@ def test_one_edit_away():
     oneEditAway(first, second)
 
 
+"""
+***** 分割等和子集
+给你一个 只包含正整数 的 非空 数组 nums 。判断是否可以将这个数组分割成两个子集，使得两个子集的元素和相等。
+示例 1：
+输入：nums = [1,5,11,5]
+输出：true
+解释：数组可以分割成 [1, 5, 5] 和 [11] 。
+
+示例 2：
+输入：nums = [1,2,3,5]
+输出：false
+解释：数组不能分割成两个元素和相等的子集。
+1 <= nums.length <= 200
+1 <= nums[i] <= 100
+
+解题思路：
+      暴力算法：O(2^n)复杂度，每个数据判断是在哪个子集
+      算法优化：每个子集的和是sum(nums) / 2，从最大的数开始，
+            如果和的大小超过sum(nums) / 2，则这个数应该放到另一个子集
+            转化为0-1背包问题，用动态规划方法求解
+"""
+
+
+def canPartition(nums: list[int]) -> bool:
+    if len(nums) <= 1:
+        return False
+
+    sum_nums = sum(nums)
+    if sum_nums % 2 == 1:  # 必须能被2整除
+        return False
+
+    nums = sorted(nums)
+    target_sum = int(sum_nums / 2)
+    # 从数组中找出若干个数，且大小等于target_sum，递归求解，
+    # 如果能找到，那就是存在，优先从最大的数开始找，查找次数会比较少
+    print("find_sum(nums, target_sum)", nums, target_sum)
+    # succeed, result = find_sum(nums, target_sum)
+    # print(succeed, result)
+    # 动态规划方法求解
+    result = [[False] * (target_sum + 1) for _ in range(len(nums))]
+
+    for i in range(len(nums)):
+        j = 0
+        result[i][j] = True
+
+    num_0 = nums[0]
+    if num_0 <= target_sum:
+        result[0][num_0] = True
+
+    for i in range(1, len(nums)):
+        num = nums[i]
+
+        if num < target_sum:
+            result[i][num] = True
+
+        for j in range(target_sum + 1):
+            if j >= num:
+                result[i][j] = result[i - 1][j] | result[i - 1][j - num]
+            else:
+                result[i][j] = result[i - 1][j]
+
+    # print(result)
+
+    for i in range(len(nums)):
+        if result[i][-1]:
+            return True
+
+    return False
+
+
+# def find_sum(arr, target_sum):
+#     result = []
+#     # 避免重复item尝试
+#     test_item = set()
+#     for i in range(len(arr)):
+#         item = arr[i]
+#         if item == target_sum:
+#             result.append(item)
+#             return True, result
+#         if item > target_sum:
+#             continue
+#         else:
+#             if i == len(arr) - 1:
+#                 return False, result
+#             # print("find_sum(arr[i + 1:], target_sum - item)", arr[i + 1:], target_sum - item)
+#             if item in test_item:
+#                 continue
+#
+#             test_item.add(item)
+#             succeed, sub_result = find_sum(arr[i + 1:], target_sum - item)
+#             if succeed:
+#                 result.append(item)
+#                 result.extend(sub_result)
+#                 return True, result
+#     if sum(result) == target_sum:
+#         return True, result
+#     else:
+#         return False, result
+
+
+def test_can_partition():
+    nums = [1, 5, 11, 5]
+    print(canPartition(nums))
+    nums = [1, 2, 5]
+    print(canPartition(nums))
+    nums = [1, 2, 3, 5]
+    print(canPartition(nums))
+    nums = [1, 1, 2, 3, 5]
+    print(canPartition(nums))
+    nums = [14, 9, 8, 4, 3, 2]
+    print(canPartition(nums))
+    nums = [66, 90, 7, 6, 32, 16, 2, 78, 69, 88, 85, 26, 3, 9, 58, 65, 30, 96, 11, 31, 99, 49, 63, 83, 79, 97, 20, 64,
+            81, 80, 25, 69, 9, 75, 23, 70, 26, 71, 25, 54, 1, 40, 41, 82, 32, 10, 26, 33, 50, 71, 5, 91, 59, 96, 9, 15,
+            46, 70, 26, 32, 49, 35, 80, 21, 34, 95, 51, 66, 17, 71, 28, 88, 46, 21, 31, 71, 42, 2, 98, 96, 40, 65, 92,
+            43, 68, 14, 98, 38, 13, 77, 14, 13, 60, 79, 52, 46, 9, 13, 25, 8]
+    print(canPartition(nums))
+
+    nums = [19, 33, 38, 60, 81, 49, 13, 61, 50, 73, 60, 82, 73, 29, 65, 62, 53, 29, 53, 86, 16, 83, 52, 67, 41, 53, 18,
+            48, 32, 35, 51, 72, 22, 22, 76, 97, 68, 88, 64, 19, 76, 66, 45, 29, 95, 24, 95, 29, 95, 76, 65, 35, 24, 85,
+            95, 87, 64, 97, 75, 88, 88, 65, 43, 79, 6, 5, 70, 51, 73, 87, 76, 68, 56, 57, 69, 77, 22, 27, 29, 12, 55,
+            58, 18, 30, 66, 53, 53, 81, 94, 76, 28, 41, 77, 17, 60, 32, 62, 62, 88, 61]
+    print(canPartition(nums))
+    nums = [100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100, 100,
+            100, 100, 100, 100, 100, 100, 100, 100, 100, 99, 97]
+    print(canPartition(nums))
+
+    nums = [4, 4, 4, 4, 4, 4, 4, 4, 8, 8, 8, 8, 8, 8, 8, 8, 12, 12, 12, 12, 12, 12, 12, 12, 16, 16, 16, 16, 16, 16, 16,
+            16, 20, 20, 20, 20, 20, 20, 20, 20, 24, 24, 24, 24, 24, 24, 24, 24, 28, 28, 28, 28, 28, 28, 28, 28, 32, 32,
+            32, 32, 32, 32, 32, 32, 36, 36, 36, 36, 36, 36, 36, 36, 40, 40, 40, 40, 40, 40, 40, 40, 44, 44, 44, 44, 44,
+            44, 44, 44, 48, 48, 48, 48, 48, 48, 48, 48, 52, 52, 52, 52, 52, 52, 52, 52, 56, 56, 56, 56, 56, 56, 56, 56,
+            60, 60, 60, 60, 60, 60, 60, 60, 64, 64, 64, 64, 64, 64, 64, 64, 68, 68, 68, 68, 68, 68, 68, 68, 72, 72, 72,
+            72, 72, 72, 72, 72, 76, 76, 76, 76, 76, 76, 76, 76, 80, 80, 80, 80, 80, 80, 80, 80, 84, 84, 84, 84, 84, 84,
+            84, 84, 88, 88, 88, 88, 88, 88, 88, 88, 92, 92, 92, 92, 92, 92, 92, 92, 96, 96, 96, 96, 96, 96, 96, 96, 97,
+            99]
+    print(canPartition(nums))
+
+
+"""
+************ 划分为k个相等的子集
+给定一个整数数组  nums 和一个正整数 k，找出是否有可能把这个数组分成 k 个非空子集，其总和都相等。
+示例 1：
+输入： nums = [4, 3, 2, 3, 5, 2, 1], k = 4
+输出： True
+说明： 有可能将其分成 4 个子集（5），（1,4），（2,3），（2,3）等于总和。
+
+示例 2:
+输入: nums = [1,2,3,4], k = 3
+输出: false
+ 
+提示：
+1 <= k <= len(nums) <= 16
+0 < nums[i] < 10000
+每个元素的频率在 [1,4] 范围内
+
+解题思路：
+      暴力算法：O(k^n)复杂度，每个数据判断是在哪个子集
+      算法优化：在分割2个等和子集的基础上。
+              找出所有和为target的组合，并从小到大排序。
+"""
+import queue
+
+
+def canPartitionKSubsets_wrong_answer(nums: list[int], k: int) -> bool:
+    num_sum = sum(nums)
+    if num_sum % k != 0:
+        print(False)
+        return False
+    target = num_sum // k
+    num_len = len(nums)
+    nums = sorted(nums)
+    print(nums, k, target)
+
+    dp = np.ones(shape=(num_len, target + 1), dtype=np.uint8) * -1
+    for i in range(num_len):
+        dp[i][0] = i
+
+    if nums[0] <= target:
+        dp[0][nums[0]] = 0
+
+    for i in range(1, num_len):
+        num = nums[i]
+        for j in range(1, target + 1):
+            if dp[i - 1][j] >= 0:
+                dp[i][j] = dp[i - 1][j]
+
+            if j >= num and dp[i - 1][j - num] >= 0:
+                dp[i][j] = i
+
+    distinct_path = set()
+    pathes = []
+    pathes_ids = []
+    used_num_id = set()
+    path_ids = []
+    # BFS遍历 + 剪枝
+    q = queue.Queue()
+    for i in range(num_len - 1, -1, -1):
+        if dp[i][-1] >= 0:
+            num_id = dp[i][-1]
+            num = nums[num_id]
+            next_cols = target - num
+            cur_path = [num_id]
+            print(num, next_cols, cur_path, i)
+            q.put((num, next_cols, cur_path, i))
+
+    while not q.empty():
+        num, next_target, cur_path, row = q.get()
+        if next_target == 0:
+            new_path = True
+            distinct_path.add("-".join(map(str, [nums[num_id] for num_id in cur_path])))
+            if new_path:
+                for num_id in cur_path:
+                    used_num_id.add(num_id)
+                    path_ids.append(num_id)
+                pathes.append([nums[num_id] for num_id in cur_path])
+                pathes_ids.append([num_id for num_id in cur_path])
+        else:
+            for i in range(row + 1):
+                if i in used_num_id:
+                    continue
+
+                num_id = dp[i][next_target]
+                cur_num = nums[num_id]
+                if num_id in cur_path:
+                    continue
+                if num_id >= 0:
+                    target_tmp = next_target - cur_num
+                    path_tmp = cur_path.copy()
+                    path_tmp.append(num_id)
+                    q.put((cur_num, target_tmp, path_tmp, i))
+
+    print("pathes", pathes)
+    print("path_ids", path_ids)
+    print("pathes_ids", pathes_ids)
+    path_num = len(pathes)
+
+    for path in distinct_path:
+        print(path)
+
+    for i in range(num_len):
+        print(dp[i, :].tolist())
+    print(dp)
+    print(path_num, k)
+    if len(pathes) == k:
+        print(True)
+        return True
+
+    print(False)
+    return False
+
+
+def canPartitionKSubsets(nums: list[int], k: int) -> bool:
+    num_sum = sum(nums)
+    if num_sum % k != 0:
+        print(False)
+        return False
+    target = num_sum // k
+    num_len = len(nums)
+    nums = sorted(nums, key=lambda x: -x)
+    # nums = sorted(nums)
+    if nums[-1] > target:
+        print(False)
+        return False
+    if k == 1:
+        return True
+    print(nums, k, target)
+
+    # 对每个元素，看放入哪个桶 O(n^k)
+    # 对于每个桶，看需要哪些 O(kx2^n)
+    used_id = set()
+    result = k_partition_dfs(0, used_id, nums, target, k, 0, num_len)
+    print(result)
+    return result
+
+
+def k_partition_dfs(cur_sum, used_id, nums, target, k, index, num_len):
+    cur_num = nums[index]
+    used_id.add(index)
+    cur_sum += cur_num
+    if cur_sum == target:
+        k -= 1
+        cur_sum = 0
+    if k == 1 and index < num_len - 1:
+        return True
+    if cur_sum > target:
+        return False
+
+    prev = None
+    for i in range(num_len):
+        if i in used_id:
+            continue
+        used_id.add(i)
+        if prev and nums[i] == prev:
+            pass
+        else:
+            result_i = k_partition_dfs(cur_sum, used_id, nums, target, k, i, num_len)
+            # print("result_i:", cur_sum, used_id, target, k, i, num_len, result_i, prev)
+            if result_i:
+                return True
+        prev = nums[i]
+        used_id.remove(i)
+    return False
+
+
+def test_can_partition_k_subsets():
+    ###### [1, 2, 2, 4, 4, 4, 4, 6, 6, 9] 3 14 True
+    nums = [4, 4, 4, 6, 1, 2, 2, 9, 4, 6]
+    canPartitionKSubsets(nums, k=3)
+
+    ###### [2, 3, 4, 4, 4, 5, 5, 6, 7, 8, 9, 9, 9, 10, 10, 10] 5 21 True
+    nums = [4, 5, 9, 3, 10, 2, 10, 7, 10, 8, 5, 9, 4, 6, 4, 9]
+    canPartitionKSubsets(nums, k=5)
+
+    nums = [4, 3, 2, 3, 5, 2, 1]  # True
+    canPartitionKSubsets(nums, k=4)
+    nums = [1, 2, 3, 4]  # False
+    canPartitionKSubsets(nums, k=3)
+    nums = [1, 1, 1, 1, 2, 2, 2, 2]  # True
+    canPartitionKSubsets(nums, k=2)
+    ##### [2, 3, 4, 4, 4, 5, 5, 6, 7, 8, 9, 9, 9, 10, 10, 10] 21 # True
+    nums = [4, 5, 9, 3, 10, 2, 10, 7, 10, 8, 5, 9, 4, 6, 4, 9]
+    canPartitionKSubsets(nums, k=5)
+    ##### [60, 202, 494, 497, 601, 625, 679, 771, 815, 883, 944, 1118, 1240, 3889, 4471, 4623] # True
+    nums = [815, 625, 3889, 4471, 60, 494, 944, 1118, 4623, 497, 771, 679, 1240, 202, 601, 883]
+    canPartitionKSubsets(nums, k=3)
+
+    #### [10, 10, 10, 8, 7, 6, 6, 6, 5, 3, 3, 3, 2, 2, 2, 1] 6 14
+    nums = [3, 3, 10, 2, 6, 5, 10, 6, 8, 3, 2, 1, 6, 10, 7, 2]
+    canPartitionKSubsets(nums, k=6)
+
+    # # [16, 10, 10, 5, 4, 4, 4, 4, 3] 3 20
+    nums = [4, 16, 5, 3, 10, 4, 4, 4, 10]
+    canPartitionKSubsets(nums, k=3)
+
+
+"""
+****** 鸡蛋掉落
+给你 k 枚相同的鸡蛋，并可以使用一栋从第 1 层到第 n 层共有 n 层楼的建筑。
+已知存在楼层 f ，满足 0 <= f <= n ，任何从 高于 f 的楼层落下的鸡蛋都会碎，从 f 楼层或比它低的楼层落下的鸡蛋都不会破。
+每次操作，你可以取一枚没有碎的鸡蛋并把它从任一楼层 x 扔下（满足 1 <= x <= n）。如果鸡蛋碎了，你就不能再次使用它。如果某枚鸡蛋扔下后没有摔碎，则可以在之后的操作中 重复使用 这枚鸡蛋。
+请你计算并返回要确定 f 确切的值 的 最小操作次数 是多少？
+
+示例 1：
+
+输入：k = 1, n = 2
+输出：2
+解释：
+鸡蛋从 1 楼掉落。如果它碎了，肯定能得出 f = 0 。 
+否则，鸡蛋从 2 楼掉落。如果它碎了，肯定能得出 f = 1 。 
+如果它没碎，那么肯定能得出 f = 2 。 
+因此，在最坏的情况下我们需要移动 2 次以确定 f 是多少。 
+
+示例 2：
+输入：k = 2, n = 6   6>=f>=0 
+输出：3
+鸡蛋从3落下，如果坏了，2>=f>=0, 否则 6>=f>=4
+
+示例 3：
+输入：k = 3, n = 14
+输出：4
+
+示例 4：
+输入：k = 2, n = 7   7>=f>=0
+鸡蛋从3落下，如果坏了， 2>=f>=0, 否则 7>=f>=4
+鸡蛋从4落下，如果坏了， 3>=f>=0, 否则 7>=f>=5
+
+错误思路：
+有的读者也许会有这种想法：二分查找排除楼层的速度无疑是最快的，那干脆先用二分查找，等到只剩 1 个鸡蛋的时候再执行线性扫描，这样得到的结果是不是就是最少的扔鸡蛋次数呢？
+很遗憾，并不是，比如说把楼层变高一些，100 层，给你 2 个鸡蛋，你在 50 层扔一下，碎了，那就只能线性扫描 1～49 层了，最坏情况下要扔 50 次。
+如果不要「二分」，变成「五分」「十分」都会大幅减少最坏情况下的尝试次数。比方说第一个鸡蛋每隔十层楼扔，在哪里碎了第二个鸡蛋一个个线性扫描，总共不会超过 20 次。
+最优解其实是 14 次。最优策略非常多，而且并没有什么规律可言。
+
+解题思路：
+动态规划的方法 dp[k][n]
+"""
+
+
+def superEggDrop(k: int, n: int) -> int:
+    if k == 1:
+        return n
+
+    dp = np.zeros(shape=(k + 1, n + 1), dtype=np.int32)
+    for i in range(1, k + 1):
+        for j in range(1, n + 1):
+            if i == 1:
+                dp[i][j] = j
+            elif j == 1:
+                dp[i][j] = 1
+            else:
+                # try_times = []
+                min_value = None
+                for n_i in range(1, j + 1):  # 在1--n楼层尝试
+                    # 当前楼层碎了 、 当前楼层没碎 两种情况
+                    cur_val = max(dp[i - 1][n_i - 1], dp[i][j - n_i]) + 1
+                    if min_value is None:
+                        min_value = cur_val
+                    else:
+                        if cur_val <= min_value:
+                            min_value = cur_val
+                        else:
+                            break
+                    # try_times.append(max(dp[i - 1][n_i - 1], dp[i][j - n_i]) + 1)
+
+                # print("try_times", try_times)
+                # dp[i][j] = min(try_times)
+                dp[i][j] = min_value
+
+    print(dp)
+    return dp[-1][-1]
+
+
+def test_super_egg_drop():
+    print(superEggDrop(k=1, n=2))
+    print(superEggDrop(k=2, n=2))
+    print(superEggDrop(k=2, n=6))
+    print(superEggDrop(k=2, n=7))
+    print(superEggDrop(k=3, n=14))
+    print(superEggDrop(k=2, n=100))
+    # print(superEggDrop(k=4, n=2000))
+
+
 if __name__ == '__main__':
     # test_envelopes()
     # test_max_profit()
@@ -657,4 +1085,7 @@ if __name__ == '__main__':
     # test_maximal_square()
     # test_max_sub_array()
     # test_minimum_total()
-    test_one_edit_away()
+    # test_one_edit_away()
+    # test_can_partition()
+    # test_can_partition_k_subsets()
+    test_super_egg_drop()
