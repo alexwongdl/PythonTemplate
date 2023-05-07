@@ -4,6 +4,7 @@
 import re
 import urllib.request
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from multiprocessing import Pool
 from selenium.webdriver.common.by import By
 import requests
@@ -190,7 +191,11 @@ def get_sotck_num_url(stock_id):
 
 
 def get_stock_info(stock_id_list):
-    chrome = webdriver.Chrome()
+    options = Options()
+    options.add_argument('–headless')
+    options.add_argument('–no-sandbox')
+    options.add_argument('–disable-dev-shm-usage')
+    chrome = webdriver.Chrome(chrome_options=options)
 
     result_list = []
     for stock_id in stock_id_list:
@@ -246,7 +251,7 @@ def get_stock_info(stock_id_list):
             chuquanri = chrome.find_element_by_xpath("//*[@id='sharebonus_1']/tbody/tr[1]/td[6]").text
             dengjiri = chrome.find_element_by_xpath("//*[@id='sharebonus_1']/tbody/tr[1]/td[7]").text
 
-            result_list.append((name, price, change_ratio, exchange_ratio_percent, pb, pe, industry,
+            result_list.append((stock_id, name, price, change_ratio, exchange_ratio_percent, pb, pe, industry,
                                 shebao_list, shebao_num,
                                 gonggao_date, songgu, zhuangu, paixi, chuquanri, dengjiri))
         except Exception as e:
@@ -262,59 +267,61 @@ def devide_list(list, n):
         yield list[i:i + n]
 
 
-def list_all_stock():
+def list_all_stock(stock_id_list, file_name):
     count1 = 1
 
-    wb = xlwt.Workbook()
-    ws = wb.add_sheet(u'stock')
-    ws.write(0, 0, u'股票代码')
-    ws.write(0, 1, u'股票名称')
-    ws.write(0, 2, u'股票板块')
-    ws.write(0, 3, u'id')
-    ws.write(0, 4, u'head')
+    # wb = xlwt.Workbook()
+    # ws = wb.add_sheet(u'stock')
+    # ws.write(0, 0, u'股票代码')
+    # ws.write(0, 1, u'股票名称')
+    # ws.write(0, 2, u'股票板块')
+    # ws.write(0, 3, u'id')
+    # ws.write(0, 4, u'head')
     # ws2 = wb.add_sheet(u'industry')
     # ws2.write(0, 0, u'股票板块')
     # ws2.write(0, 1, u'统计时间')
 
     # 目前深证最大号为002725，获取上交所创业板请修改相应最大号码
     # stock_id_list = [i for i in range(1, 100)]
-    stock_id_list = [i for i in range(1, 3044)]  # 1-3043 深A
-    stock_id_list.extend([i for i in range(300001, 301289)])  # 300001-301288 深A创
+    # stock_id_list = [i for i in range(1, 3044)]  # 1-3043 深A
+    # stock_id_list.extend([i for i in range(300001, 301289)])  # 300001-301288 深A创
 
-    stock_id_list.extend([i for i in range(600000, 604000)])  # 600000 - 603999 沪A
-    stock_id_list.extend([i for i in range(605001, 605600)])  # 605001 - 605599 沪A
+    # stock_id_list.extend([i for i in range(600000, 604000)])  # 600000 - 603999 沪A
+    # stock_id_list.extend([i for i in range(605001, 605600)])  # 605001 - 605599 沪A
     #### stock_id_list.extend([i for i in range(688001, 688982)])  # 688001 - 688981 沪A 科创板
     print(stock_id_list)
 
-    pool_num = 8
+    pool_num = 16
 
     stock_id_list_n = []
-    for stock_ids in devide_list(stock_id_list, int(len(stock_id_list) / pool_num / 10)):
+    for stock_ids in devide_list(stock_id_list, int(len(stock_id_list) / pool_num / 5)):
         stock_id_list_n.append(stock_ids)
     print("stock_id_list_n", stock_id_list_n, len(stock_id_list_n))
 
-    pool = Pool(len(stock_id_list_n))
+    # pool = Pool(len(stock_id_list_n))
+    pool = Pool(pool_num)
     results_list = pool.map(get_stock_info, stock_id_list_n)
     pool.close()
     pool.join()
+    # results_list = get_stock_info(stock_id_list)
 
-    with open(save_file_txt, 'w') as writer:
-        writer.write("股票名\t价格\t涨跌幅(%)\t换手率(%)\t市盈率\t市净率\t行业板块\t社保基金\t社保基金数"
+    with open(file_name, 'w') as writer:
+        writer.write("股票id\t股票名\t价格\t涨跌幅(%)\t换手率(%)\t市盈率\t市净率\t行业板块\t社保基金\t社保基金数"
                      "\t公告日期\t送股\t转股\t派息\t除权日\t登记日\n")
         # results = get_stock_info(stock_id_list)
         # print("results", results)
         for results in results_list:
             for result in results:
-                name, price, change_ratio, exchange_ratio_percent, pe, pb, industry, \
+                stock_id, name, price, change_ratio, exchange_ratio_percent, pe, pb, industry, \
                 shebao_list, shebao_num, gonggao_date, songgu, zhuangu, paixi, chuquanri, dengjiri = result
 
-                writer.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\t"
+                writer.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\t"
                              "{}\t{}\t{}\t{}\t{}\t{}\t{}\t{}\n".
-                             format(name, price, change_ratio, exchange_ratio_percent, pe, pb, industry,
+                             format(stock_id, name, price, change_ratio, exchange_ratio_percent, pe, pb, industry,
                                     shebao_list, shebao_num,
                                     gonggao_date, songgu, zhuangu, paixi, chuquanri, dengjiri))
 
-    wb.save(save_file_name)
+    # wb.save(save_file_name)
 
 
 if __name__ == '__main__':
@@ -324,7 +331,23 @@ if __name__ == '__main__':
     # print(m.group())
 
     # 遍历所有股票
-    list_all_stock()
+    # stock_id_list = []
+    # stock_id_list.extend([i for i in range(1, 3044)])  # 1-3043 深A
+    # list_all_stock(stock_id_list, "sz_stock_sina_1.txt")
+
+    # stock_id_list = []
+    # stock_id_list.extend([i for i in range(300001, 301289)])  # 300001-301288 深A创
+    # list_all_stock(stock_id_list, "sz_stock_sina_2.txt")
+
+    # stock_id_list = []
+    # stock_id_list.extend([i for i in range(600000, 604000)])  # 600000 - 603999 沪A
+    # list_all_stock(stock_id_list, "sh_stock_sina_1.txt")
+
+    stock_id_list = []
+    stock_id_list.extend([i for i in range(605001, 605600)])  # 605001 - 605599 沪A
+    list_all_stock(stock_id_list, "sh_stock_sina_2.txt")
+
+    pass
 
     # stock_info = StockInfo()
     # stock_info.test(1, "平安银行")
